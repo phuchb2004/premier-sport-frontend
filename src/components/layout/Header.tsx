@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useCart } from '../../hooks/useCart';
 
@@ -7,6 +7,15 @@ export function Header() {
   const { user, isAuthenticated, logout } = useAuth();
   const { itemCount } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+  const [prevPathname, setPrevPathname] = useState(location.pathname);
+
+  // Close mobile menu on any navigation (including programmatic redirects).
+  // Uses render-phase state adjustment to avoid calling setState inside useEffect.
+  if (prevPathname !== location.pathname) {
+    setPrevPathname(location.pathname);
+    setMenuOpen(false);
+  }
 
   const categories = [
     { label: 'Kits', path: '/products/kits' },

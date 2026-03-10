@@ -17,12 +17,26 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Response interceptor - clear stale token on 401; ProtectedRoute handles redirect
+// Response interceptor - unwrap ApiResponse<T> envelope; handle 401
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Backend wraps every response in { success, message, data, timestamp }.
+    // Unwrap transparently so services can type against the inner data directly.
+    if (
+      response.data !== null &&
+      typeof response.data === 'object' &&
+      'success' in response.data &&
+      'data' in response.data
+    ) {
+      response.data = (response.data as { data: unknown }).data;
+    }
+    return response;
+  },
   (error: AxiosError<ApiError>) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('accessToken');
+      // Notify AuthContext to clear user state without a hard page reload
+      window.dispatchEvent(new Event('auth:logout'));
     }
     return Promise.reject(error);
   }

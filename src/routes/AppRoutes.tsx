@@ -1,27 +1,18 @@
+import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ProtectedRoute } from './ProtectedRoute';
 import { AdminRoute } from './AdminRoute';
+import { Spinner } from '../components/Spinner';
 
 // Pages - lazy loaded
-import { lazy, Suspense } from 'react';
-
 const HomePage = lazy(() => import('../pages/HomePage'));
 const LoginPage = lazy(() => import('../pages/LoginPage'));
 const RegisterPage = lazy(() => import('../pages/RegisterPage'));
 const AboutPage = lazy(() => import('../pages/AboutPage'));
 
-// Loading fallback
-function PageLoader() {
-  return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600" />
-    </div>
-  );
-}
-
 export function AppRoutes() {
   return (
-    <Suspense fallback={<PageLoader />}>
+    <Suspense fallback={<Spinner />}>
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<HomePage />} />

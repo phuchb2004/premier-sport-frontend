@@ -1,5 +1,5 @@
 import api from './api';
-import type { Cart, CartItem } from '../types';
+import type { AddToCartRequest, Cart } from '../types';
 
 export const cartService = {
   async getCart(): Promise<Cart> {
@@ -7,7 +7,7 @@ export const cartService = {
     return response.data;
   },
 
-  async addItem(item: Omit<CartItem, 'productName' | 'productImage'>): Promise<Cart> {
+  async addItem(item: AddToCartRequest): Promise<Cart> {
     const response = await api.post<Cart>('/cart/items', item);
     return response.data;
   },

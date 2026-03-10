@@ -76,11 +76,12 @@ function ProductCard({ product }: { product: Product }) {
 export default function HomePage() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
 
   useEffect(() => {
     productService.getFeaturedProducts()
       .then(setFeaturedProducts)
-      .catch(() => setFeaturedProducts([]))
+      .catch(() => setFetchError(true))
       .finally(() => setIsLoading(false));
   }, []);
 
@@ -172,6 +173,10 @@ export default function HomePage() {
                   </div>
                 </div>
               ))}
+            </div>
+          ) : fetchError ? (
+            <div className="text-center py-12 text-gray-500">
+              <p>Unable to load featured products. Please try again later.</p>
             </div>
           ) : featuredProducts.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">

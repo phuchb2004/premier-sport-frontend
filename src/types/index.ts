@@ -97,3 +97,10 @@ export interface ApiError {
   message: string;
   timestamp: string;
 }
+
+export interface AddToCartRequest {
+  productId: string;
+  size: string;
+  color?: string;
+  quantity: number;
+}

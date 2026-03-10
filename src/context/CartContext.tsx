@@ -1,14 +1,14 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { cartService } from '../services/cartService';
 import { useAuth } from '../hooks/useAuth';
-import type { Cart, CartItem } from '../types';
+import type { AddToCartRequest, Cart } from '../types';
 import { CartContext } from '../hooks/useCart';
 
 export interface CartContextType {
   cart: Cart | null;
   itemCount: number;
   isLoading: boolean;
-  addItem: (item: Omit<CartItem, 'productName' | 'productImage'>) => Promise<void>;
+  addItem: (item: AddToCartRequest) => Promise<void>;
   updateItem: (itemIndex: number, quantity: number) => Promise<void>;
   removeItem: (itemIndex: number) => Promise<void>;
   clearCart: () => Promise<void>;
@@ -41,7 +41,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [isAuthenticated]);
 
-  const addItem = async (item: Omit<CartItem, 'productName' | 'productImage'>) => {
+  const addItem = async (item: AddToCartRequest) => {
     const updated = await cartService.addItem(item);
     setCart(updated);
   };

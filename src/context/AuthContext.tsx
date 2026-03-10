@@ -16,13 +16,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(() => authService.isAuthenticated());
 
+  // Hydrate user on mount if a token exists in localStorage
   useEffect(() => {
     if (authService.isAuthenticated()) {
       authService.getMe()
         .then(setUser)
-        .catch(() => localStorage.removeItem('accessToken'))
+        .catch(() => {
+          localStorage.removeItem('accessToken');
+          setUser(null);
+        })
         .finally(() => setIsLoading(false));
     }
+  }, []);
+
+  // React to 401 responses from any API call — clear user without a page reload
+  useEffect(() => {
+    const handleForceLogout = () => setUser(null);
+    window.addEventListener('auth:logout', handleForceLogout);
+    return () => window.removeEventListener('auth:logout', handleForceLogout);
   }, []);
 
   const login = async (data: LoginRequest) => {
@@ -36,8 +47,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async () => {
-    await authService.logout();
-    setUser(null);
+    try {
+      await authService.logout();
+    } finally {
+      setUser(null);
+    }
   };
 
   return (

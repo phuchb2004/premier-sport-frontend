@@ -6,7 +6,13 @@ export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = (location.state as { from?: string })?.from || '/';
+  const rawFrom =
+    typeof location.state === 'object' &&
+    location.state !== null &&
+    'from' in location.state
+      ? (location.state as { from: unknown }).from
+      : undefined;
+  const from = typeof rawFrom === 'string' ? rawFrom : '/';
 
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
