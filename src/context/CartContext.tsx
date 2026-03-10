@@ -1,9 +1,10 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { cartService } from '../services/cartService';
-import { useAuth } from './AuthContext';
+import { useAuth } from '../hooks/useAuth';
 import type { Cart, CartItem } from '../types';
+import { CartContext } from '../hooks/useCart';
 
-interface CartContextType {
+export interface CartContextType {
   cart: Cart | null;
   itemCount: number;
   isLoading: boolean;
@@ -13,22 +14,30 @@ interface CartContextType {
   clearCart: () => Promise<void>;
 }
 
-const CartContext = createContext<CartContextType | null>(null);
-
 export function CartProvider({ children }: { children: ReactNode }) {
   const { isAuthenticated } = useAuth();
   const [cart, setCart] = useState<Cart | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(() => isAuthenticated);
+  const [prevIsAuthenticated, setPrevIsAuthenticated] = useState(isAuthenticated);
+
+  // Adjust state during rendering when auth changes (React recommended pattern).
+  // Avoids calling setState synchronously inside useEffect.
+  if (prevIsAuthenticated !== isAuthenticated) {
+    setPrevIsAuthenticated(isAuthenticated);
+    if (!isAuthenticated) {
+      setCart(null);
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
+    }
+  }
 
   useEffect(() => {
     if (isAuthenticated) {
-      setIsLoading(true);
       cartService.getCart()
         .then(setCart)
         .catch(() => setCart(null))
         .finally(() => setIsLoading(false));
-    } else {
-      setCart(null);
     }
   }, [isAuthenticated]);
 
@@ -59,10 +68,4 @@ export function CartProvider({ children }: { children: ReactNode }) {
       {children}
     </CartContext.Provider>
   );
-}
-
-export function useCart() {
-  const context = useContext(CartContext);
-  if (!context) throw new Error('useCart must be used within CartProvider');
-  return context;
 }
