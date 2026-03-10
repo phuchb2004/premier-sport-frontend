@@ -26,7 +26,7 @@ export const productService = {
   },
 
   async getCategories(): Promise<{ category: string; count: number }[]> {
-    const response = await api.get('/products/categories');
+    const response = await api.get<{ category: string; count: number }[]>('/products/categories');
     return response.data;
   },
 };

@@ -3,7 +3,6 @@ import type { ApiError } from '../types';
 
 const api = axios.create({
   baseURL: '/api/v1',
-  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -18,13 +17,12 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Response interceptor - handle 401 globally
+// Response interceptor - clear stale token on 401; ProtectedRoute handles redirect
 api.interceptors.response.use(
   (response) => response,
   (error: AxiosError<ApiError>) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('accessToken');
-      window.location.href = '/login';
     }
     return Promise.reject(error);
   }

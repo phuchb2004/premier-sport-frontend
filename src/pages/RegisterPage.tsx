@@ -45,7 +45,7 @@ export default function RegisterPage() {
     }
   };
 
-  const setField = (field: string, value: string) =>
+  const setField = (field: keyof typeof form, value: string) =>
     setForm((prev) => ({ ...prev, [field]: value }));
 
   return (
