@@ -9,6 +9,8 @@ const HomePage = lazy(() => import('../pages/HomePage'));
 const LoginPage = lazy(() => import('../pages/LoginPage'));
 const RegisterPage = lazy(() => import('../pages/RegisterPage'));
 const AboutPage = lazy(() => import('../pages/AboutPage'));
+const ProductsPage = lazy(() => import('../pages/ProductsPage'));
+const ProductDetailPage = lazy(() => import('../pages/ProductDetailPage'));
 
 export function AppRoutes() {
   return (
@@ -20,7 +22,12 @@ export function AppRoutes() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/about" element={<AboutPage />} />
 
-        {/* Protected user routes - placeholder pages for sprint 2+ */}
+        {/* Product routes */}
+        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/products/:category" element={<ProductsPage />} />
+        <Route path="/products/:category/:slug" element={<ProductDetailPage />} />
+
+        {/* Protected user routes - placeholder pages for sprint 3+ */}
         <Route element={<ProtectedRoute />}>
           <Route path="/cart" element={<div className="p-8 text-center">Cart — Sprint 3</div>} />
           <Route path="/checkout" element={<div className="p-8 text-center">Checkout — Sprint 3</div>} />
@@ -35,11 +42,6 @@ export function AppRoutes() {
           <Route path="/admin/orders" element={<div className="p-8 text-center">Admin Orders — Sprint 4</div>} />
           <Route path="/admin/users" element={<div className="p-8 text-center">Admin Users — Sprint 4</div>} />
         </Route>
-
-        {/* Product routes - Sprint 2 */}
-        <Route path="/products" element={<div className="p-8 text-center">Products — Sprint 2</div>} />
-        <Route path="/products/:category" element={<div className="p-8 text-center">Category — Sprint 2</div>} />
-        <Route path="/products/:category/:slug" element={<div className="p-8 text-center">Product Detail — Sprint 2</div>} />
 
         {/* 404 */}
         <Route path="*" element={<div className="p-8 text-center text-gray-500">404 — Page not found</div>} />
