@@ -11,6 +11,10 @@ const RegisterPage = lazy(() => import('../pages/RegisterPage'));
 const AboutPage = lazy(() => import('../pages/AboutPage'));
 const ProductsPage = lazy(() => import('../pages/ProductsPage'));
 const ProductDetailPage = lazy(() => import('../pages/ProductDetailPage'));
+const CartPage = lazy(() => import('../pages/CartPage'));
+const CheckoutPage = lazy(() => import('../pages/CheckoutPage'));
+const OrderHistoryPage = lazy(() => import('../pages/OrderHistoryPage'));
+const OrderConfirmationPage = lazy(() => import('../pages/OrderConfirmationPage'));
 
 export function AppRoutes() {
   return (
@@ -27,12 +31,12 @@ export function AppRoutes() {
         <Route path="/products/:category" element={<ProductsPage />} />
         <Route path="/products/:category/:slug" element={<ProductDetailPage />} />
 
-        {/* Protected user routes - placeholder pages for sprint 3+ */}
+        {/* Protected user routes */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/cart" element={<div className="p-8 text-center">Cart — Sprint 3</div>} />
-          <Route path="/checkout" element={<div className="p-8 text-center">Checkout — Sprint 3</div>} />
-          <Route path="/orders" element={<div className="p-8 text-center">Orders — Sprint 3</div>} />
-          <Route path="/orders/:id" element={<div className="p-8 text-center">Order Detail — Sprint 3</div>} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/orders" element={<OrderHistoryPage />} />
+          <Route path="/orders/:id" element={<OrderConfirmationPage />} />
         </Route>
 
         {/* Admin routes */}
