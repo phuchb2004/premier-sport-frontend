@@ -100,7 +100,10 @@ export interface ApiError {
 
 export interface AddToCartRequest {
   productId: string;
+  productName: string;
+  productImage: string;
   size: string;
   color?: string;
   quantity: number;
+  // unitPrice is NOT sent — server fetches it from product-service to prevent tampering
 }
