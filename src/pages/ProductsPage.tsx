@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Layout } from '../components/layout/Layout';
 import { productService } from '../services/productService';
 import type { Product, ProductCategory } from '../types';
@@ -131,11 +131,12 @@ function Pagination({
 export default function ProductsPage() {
   const { category: categoryParam } = useParams<{ category?: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
-  // Derive active category from URL param or query string
+  // Category comes from URL path segment (/products/:category), not search params
   const activeCategory: ProductCategory | 'ALL' = categoryParam
     ? (categoryParam.toUpperCase() as ProductCategory)
-    : (searchParams.get('category')?.toUpperCase() as ProductCategory) || 'ALL';
+    : 'ALL';
 
   const search = searchParams.get('search') || '';
   const sort = searchParams.get('sort') || 'newest';
@@ -146,6 +147,11 @@ export default function ProductsPage() {
   const [totalElements, setTotalElements] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [searchInput, setSearchInput] = useState(search);
+
+  // Sync search input when URL search param changes (e.g. browser back/forward)
+  useEffect(() => {
+    setSearchInput(search);
+  }, [search]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -160,13 +166,34 @@ export default function ProductsPage() {
       .catch(() => {
         setProducts([]);
         setTotalPages(0);
+        setTotalElements(0);
       })
       .finally(() => setIsLoading(false));
   }, [activeCategory, search, sort, page]);
 
+  // Build query string from current non-default params (excluding category, which lives in the path)
+  function buildQuery(overrides: Record<string, string> = {}) {
+    const params = new URLSearchParams();
+    const effective = { sort, search, page: String(page), ...overrides };
+    if (effective.sort && effective.sort !== 'newest') params.set('sort', effective.sort);
+    if (effective.search) params.set('search', effective.search);
+    if (effective.page && effective.page !== '0') params.set('page', effective.page);
+    return params.toString();
+  }
+
+  // Category changes navigate to a new URL path segment
+  function handleCategoryChange(cat: ProductCategory | 'ALL') {
+    const query = buildQuery({ page: '0' });
+    if (cat === 'ALL') {
+      navigate(`/products${query ? '?' + query : ''}`);
+    } else {
+      navigate(`/products/${cat.toLowerCase()}${query ? '?' + query : ''}`);
+    }
+  }
+
   function updateParam(key: string, value: string) {
     const next = new URLSearchParams(searchParams);
-    if (value && value !== 'newest' && value !== '0' && value !== 'ALL') {
+    if (value && value !== 'newest' && value !== '0') {
       next.set(key, value);
     } else {
       next.delete(key);
@@ -175,17 +202,14 @@ export default function ProductsPage() {
     setSearchParams(next);
   }
 
-  function handleCategoryChange(cat: ProductCategory | 'ALL') {
-    const next = new URLSearchParams();
-    if (cat !== 'ALL') next.set('category', cat);
-    if (sort !== 'newest') next.set('sort', sort);
-    if (search) next.set('search', search);
-    setSearchParams(next);
-  }
-
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
     updateParam('search', searchInput);
+  }
+
+  function handleClearFilters() {
+    setSearchInput('');
+    navigate('/products');
   }
 
   return (
@@ -294,10 +318,7 @@ export default function ProductsPage() {
             </p>
             {(search || activeCategory !== 'ALL') && (
               <button
-                onClick={() => {
-                  setSearchInput('');
-                  setSearchParams(new URLSearchParams());
-                }}
+                onClick={handleClearFilters}
                 className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700"
               >
                 Clear filters

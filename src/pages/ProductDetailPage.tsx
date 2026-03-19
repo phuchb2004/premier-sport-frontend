@@ -46,16 +46,19 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [fetchError, setFetchError] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [sizeError, setSizeError] = useState(false);
   const [addingToCart, setAddingToCart] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
+  const [cartError, setCartError] = useState(false);
 
   useEffect(() => {
     if (!slug) return;
     setIsLoading(true);
     setNotFound(false);
+    setFetchError(false);
     productService
       .getProductBySlug(slug)
       .then((p) => {
@@ -64,7 +67,11 @@ export default function ProductDetailPage() {
         setSelectedSize(null);
       })
       .catch((err) => {
-        if (err?.response?.status === 404) setNotFound(true);
+        if (err?.response?.status === 404) {
+          setNotFound(true);
+        } else {
+          setFetchError(true);
+        }
       })
       .finally(() => setIsLoading(false));
   }, [slug]);
@@ -83,6 +90,7 @@ export default function ProductDetailPage() {
     }
 
     setAddingToCart(true);
+    setCartError(false);
     try {
       await addItem({
         productId: product.id,
@@ -92,13 +100,40 @@ export default function ProductDetailPage() {
       setAddedToCart(true);
       setTimeout(() => setAddedToCart(false), 2000);
     } catch {
-      // cart error — silently fail, user still sees button
+      setCartError(true);
+      setTimeout(() => setCartError(false), 3000);
     } finally {
       setAddingToCart(false);
     }
   }
 
   if (isLoading) return <Layout><DetailSkeleton /></Layout>;
+
+  if (fetchError) {
+    return (
+      <Layout>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+          <div className="text-6xl mb-4">⚠️</div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Something went wrong</h1>
+          <p className="text-gray-500 mb-6">Unable to load this product. Please try again.</p>
+          <div className="flex items-center justify-center gap-3">
+            <button
+              onClick={() => window.location.reload()}
+              className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition-colors"
+            >
+              Try Again
+            </button>
+            <Link
+              to="/products"
+              className="inline-flex items-center px-6 py-3 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors"
+            >
+              ← Back to Products
+            </Link>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   if (notFound || !product) {
     return (
@@ -247,6 +282,8 @@ export default function ProductDetailPage() {
               className={`w-full py-4 rounded-xl font-bold text-base transition-all ${
                 addedToCart
                   ? 'bg-green-500 text-white'
+                  : cartError
+                  ? 'bg-red-500 text-white'
                   : isOutOfStock
                   ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
                   : 'bg-green-600 text-white hover:bg-green-700 active:scale-[0.98]'
@@ -256,6 +293,8 @@ export default function ProductDetailPage() {
                 ? 'Adding...'
                 : addedToCart
                 ? '✓ Added to Cart!'
+                : cartError
+                ? 'Failed to add — try again'
                 : isOutOfStock
                 ? 'Out of Stock'
                 : 'Add to Cart'}
