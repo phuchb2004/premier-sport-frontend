@@ -94,6 +94,8 @@ export default function ProductDetailPage() {
     try {
       await addItem({
         productId: product.id,
+        productName: product.name,
+        productImage: product.images[0] ?? '',
         size: selectedSize ?? 'ONE SIZE',
         quantity: 1,
       });
