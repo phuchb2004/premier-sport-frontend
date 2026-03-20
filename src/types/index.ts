@@ -4,6 +4,7 @@ export interface User {
   firstName: string;
   lastName: string;
   role: 'USER' | 'ADMIN';
+  enabled: boolean;
   addresses: Address[];
   createdAt: string;
 }
@@ -106,4 +107,51 @@ export interface AddToCartRequest {
   color?: string;
   quantity: number;
   // unitPrice is NOT sent — server fetches it from product-service to prevent tampering
+}
+
+// Admin types
+
+export interface CreateProductRequest {
+  name: string;
+  category: ProductCategory;
+  brand: string;
+  description: string;
+  price: number;
+  salePrice?: number;
+  images: string[];
+  sizes: string[];
+  stock: number;
+  isFeatured: boolean;
+}
+
+export interface UpdateProductRequest {
+  name?: string;
+  category?: ProductCategory;
+  brand?: string;
+  description?: string;
+  price?: number;
+  salePrice?: number;
+  clearSalePrice?: boolean;
+  images?: string[];
+  sizes?: string[];
+  stock?: number;
+  isFeatured?: boolean;
+}
+
+export interface TopProductDto {
+  productId: string;
+  productName: string;
+  totalQuantity: number;
+  totalRevenue: number;
+}
+
+export interface AnalyticsDto {
+  totalOrders: number;
+  totalRevenue: number;
+  ordersToday: number;
+  revenueToday: number;
+  ordersPreviousPeriod: number;
+  revenuePreviousPeriod: number;
+  topProducts: TopProductDto[];
+  recentOrders: Order[];
 }
