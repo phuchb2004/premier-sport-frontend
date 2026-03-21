@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#15803d"/>
+    </linearGradient>
+  </defs>
+  <!-- Hexagon background -->
+  <path d="M22 2L39.5 12V32L22 42L4.5 32V12Z" fill="url(#g)"/>
+  <!-- Inner subtle border -->
+  <path d="M22 5.5L36.5 13.8V30.2L22 38.5L7.5 30.2V13.8Z" fill="none" stroke="white" stroke-width="0.8" stroke-opacity="0.25"/>
+  <!-- Diagonal accent -->
+  <line x1="7.5" y1="30" x2="36.5" y2="14" stroke="white" stroke-width="1" stroke-opacity="0.12" stroke-linecap="round"/>
+  <!-- PS text -->
+  <text x="22" y="30" text-anchor="middle" fill="white"
+        font-family="'Arial Black', Arial, sans-serif"
+        font-weight="900" font-size="18" letter-spacing="-0.5">PS</text>
+</svg>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useCart } from '../../hooks/useCart';
+import { PremierSportLogo } from '../PremierSportLogo';
 
 export function Header() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -40,11 +41,9 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-green-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-sm">PS</span>
-            </div>
-            <span className="text-xl font-bold text-gray-900">Premier Sport</span>
+          <Link to="/" className="flex items-center gap-2.5">
+            <PremierSportLogo className="w-9 h-9" />
+            <span className="text-xl font-bold text-gray-900 tracking-tight">Premier Sport</span>
           </Link>
 
           {/* Desktop category nav */}
