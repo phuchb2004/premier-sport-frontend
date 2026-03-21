@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
 import { orderService } from '../services/orderService';
 import type { CartItem, Order } from '../types';
+import { useLanguage } from '../context/LanguageContext';
 
 const DELIVERY_COST = 4.99;
 
@@ -27,6 +28,7 @@ interface PaymentStepProps {
 }
 
 function VietQRPanel({ order }: { order: Order }) {
+  const { t } = useLanguage();
   const qrUrl =
     `https://img.vietqr.io/image/${VIETQR_BANK_ID}-${VIETQR_ACCOUNT_NO}-compact2.png` +
     `?amount=${Math.round(order.total * 100)}&addInfo=${encodeURIComponent('DH ' + order.orderNumber)}&accountName=${encodeURIComponent(VIETQR_ACCOUNT_NAME)}`;
@@ -39,27 +41,27 @@ function VietQRPanel({ order }: { order: Order }) {
           alt="VietQR"
           className="w-52 h-52 border border-gray-200 rounded-lg"
         />
-        <p className="text-xs text-gray-500">Quét mã bằng app ngân hàng bất kỳ</p>
+        <p className="text-xs text-gray-500">{t.checkoutVietQRScan}</p>
       </div>
       <div className="bg-gray-50 rounded-lg p-4 text-sm space-y-1">
         <div className="flex justify-between">
-          <span className="text-gray-500">Ngân hàng</span>
-          <span className="font-medium">Vietcombank (VCB)</span>
+          <span className="text-gray-500">{t.checkoutBankLabel}</span>
+          <span className="font-medium">{t.checkoutBankValue}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-gray-500">Số tài khoản</span>
+          <span className="text-gray-500">{t.checkoutAccountLabel}</span>
           <span className="font-medium font-mono">{VIETQR_ACCOUNT_NO}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-gray-500">Chủ tài khoản</span>
+          <span className="text-gray-500">{t.checkoutAccountOwner}</span>
           <span className="font-medium">{VIETQR_ACCOUNT_NAME}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-gray-500">Số tiền</span>
+          <span className="text-gray-500">{t.checkoutAmountLabel}</span>
           <span className="font-semibold text-green-700">£{order.total.toFixed(2)}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-gray-500">Nội dung</span>
+          <span className="text-gray-500">{t.checkoutContentLabel}</span>
           <span className="font-medium font-mono">DH {order.orderNumber}</span>
         </div>
       </div>
@@ -68,6 +70,7 @@ function VietQRPanel({ order }: { order: Order }) {
 }
 
 function MoMoPanel({ order }: { order: Order }) {
+  const { t } = useLanguage();
   const qrUrl =
     `https://img.vietqr.io/image/momo-${MOMO_PHONE}-compact2.png` +
     `?amount=${Math.round(order.total * 100)}&addInfo=${encodeURIComponent('DH ' + order.orderNumber)}&accountName=${encodeURIComponent(MOMO_NAME)}`;
@@ -81,23 +84,23 @@ function MoMoPanel({ order }: { order: Order }) {
           className="w-52 h-52 border border-gray-200 rounded-lg"
           onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
         />
-        <p className="text-xs text-gray-500">Quét mã bằng ứng dụng MoMo</p>
+        <p className="text-xs text-gray-500">{t.checkoutMoMoScan}</p>
       </div>
       <div className="bg-pink-50 rounded-lg p-4 text-sm space-y-1">
         <div className="flex justify-between">
-          <span className="text-gray-500">Số điện thoại MoMo</span>
+          <span className="text-gray-500">{t.checkoutMoMoPhone}</span>
           <span className="font-medium font-mono">{MOMO_PHONE}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-gray-500">Tên</span>
+          <span className="text-gray-500">{t.checkoutNameLabel}</span>
           <span className="font-medium">{MOMO_NAME}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-gray-500">Số tiền</span>
+          <span className="text-gray-500">{t.checkoutAmountLabel}</span>
           <span className="font-semibold text-green-700">£{order.total.toFixed(2)}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-gray-500">Nội dung</span>
+          <span className="text-gray-500">{t.checkoutContentLabel}</span>
           <span className="font-medium font-mono">DH {order.orderNumber}</span>
         </div>
       </div>
@@ -106,6 +109,7 @@ function MoMoPanel({ order }: { order: Order }) {
 }
 
 function PaymentStep({ order, onSuccess }: PaymentStepProps) {
+  const { t } = useLanguage();
   const [method, setMethod] = useState<'VIETQR' | 'MOMO'>('VIETQR');
   const [confirming, setConfirming] = useState(false);
   const [error, setError] = useState('');
@@ -117,7 +121,7 @@ function PaymentStep({ order, onSuccess }: PaymentStepProps) {
       await orderService.confirmPayment(order.id, method);
       onSuccess();
     } catch {
-      setError('Xác nhận thanh toán thất bại. Vui lòng thử lại hoặc liên hệ hỗ trợ.');
+      setError(t.checkoutPaymentError);
       setConfirming(false);
     }
   };
@@ -158,7 +162,7 @@ function PaymentStep({ order, onSuccess }: PaymentStepProps) {
       )}
 
       <p className="text-xs text-gray-500 bg-yellow-50 border border-yellow-200 rounded-lg px-3 py-2">
-        Sau khi chuyển khoản thành công, nhấn nút bên dưới để xác nhận đơn hàng.
+        {t.checkoutPaymentNote}
       </p>
 
       {error && (
@@ -172,7 +176,7 @@ function PaymentStep({ order, onSuccess }: PaymentStepProps) {
         disabled={confirming}
         className="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
       >
-        {confirming ? 'Đang xác nhận…' : 'Tôi đã hoàn tất thanh toán'}
+        {confirming ? t.checkoutConfirming : t.checkoutConfirmPayment}
       </button>
     </div>
   );
@@ -181,6 +185,7 @@ function PaymentStep({ order, onSuccess }: PaymentStepProps) {
 export default function CheckoutPage() {
   const { cart, isLoading } = useCart();
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const [step, setStep] = useState<'shipping' | 'payment'>('shipping');
   const [shipping, setShipping] = useState<ShippingForm>({
@@ -218,7 +223,7 @@ export default function CheckoutPage() {
       setOrder(created);
       setStep('payment');
     } catch {
-      setError('Không thể tạo đơn hàng. Vui lòng thử lại.');
+      setError(t.checkoutCreateOrderError);
     } finally {
       setSubmitting(false);
     }
@@ -238,31 +243,31 @@ export default function CheckoutPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">Thanh toán</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-8">{t.checkoutTitle}</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left: form */}
         <div className="lg:col-span-2">
           {step === 'shipping' && (
             <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Địa chỉ giao hàng</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">{t.checkoutShippingAddress}</h2>
 
               <form onSubmit={handleShippingSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Địa chỉ</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t.checkoutStreetLabel}</label>
                   <input
                     required
                     type="text"
                     value={shipping.street}
                     onChange={e => setShipping({ ...shipping, street: e.target.value })}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="123 Nguyễn Huệ"
+                    placeholder={t.checkoutStreetPlaceholder}
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Thành phố</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t.checkoutCityLabel}</label>
                     <input
                       required
                       type="text"
@@ -272,7 +277,7 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Tỉnh / Quận</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t.checkoutStateLabel}</label>
                     <input
                       required
                       type="text"
@@ -285,7 +290,7 @@ export default function CheckoutPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Mã bưu chính</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t.checkoutPostalCodeLabel}</label>
                     <input
                       required
                       type="text"
@@ -295,7 +300,7 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Quốc gia</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t.checkoutCountryLabel}</label>
                     <input
                       required
                       type="text"
@@ -317,7 +322,7 @@ export default function CheckoutPage() {
                   disabled={submitting}
                   className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  {submitting ? 'Đang xử lý…' : 'Tiếp tục thanh toán'}
+                  {submitting ? t.checkoutProcessing : t.checkoutContinue}
                 </button>
               </form>
             </div>
@@ -325,7 +330,7 @@ export default function CheckoutPage() {
 
           {step === 'payment' && order && (
             <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Phương thức thanh toán</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">{t.checkoutPaymentMethod}</h2>
               <PaymentStep order={order} onSuccess={handlePaymentSuccess} />
             </div>
           )}
@@ -334,7 +339,7 @@ export default function CheckoutPage() {
         {/* Right: order summary */}
         <div className="lg:col-span-1">
           <div className="bg-white rounded-xl border border-gray-200 p-6 sticky top-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Tóm tắt đơn hàng</h2>
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">{t.checkoutOrderSummary}</h2>
 
             <div className="space-y-3 mb-4">
               {displayItems.map((item, i) => (
@@ -351,15 +356,15 @@ export default function CheckoutPage() {
 
             <div className="border-t border-gray-200 pt-3 space-y-2 text-sm">
               <div className="flex justify-between text-gray-600">
-                <span>Tạm tính</span>
+                <span>{t.checkoutSubtotal}</span>
                 <span>£{subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-gray-600">
-                <span>Phí vận chuyển</span>
+                <span>{t.checkoutShippingFee}</span>
                 <span>£{DELIVERY_COST.toFixed(2)}</span>
               </div>
               <div className="flex justify-between font-semibold text-gray-900 text-base pt-1 border-t border-gray-200">
-                <span>Tổng cộng</span>
+                <span>{t.checkoutTotalLabel}</span>
                 <span>£{total.toFixed(2)}</span>
               </div>
             </div>
@@ -369,7 +374,7 @@ export default function CheckoutPage() {
                 to="/cart"
                 className="mt-4 block text-center text-sm text-gray-500 hover:text-gray-700"
               >
-                ← Quay lại giỏ hàng
+                {t.checkoutBackToCart}
               </Link>
             )}
           </div>
