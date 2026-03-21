@@ -73,8 +73,25 @@ export function ChatWidget() {
     setIsTyping(true);
 
     try {
-      const sid = await ensureSession();
-      const result = await chatService.sendMessage(sid, text);
+      let sid = await ensureSession();
+      let result;
+      try {
+        result = await chatService.sendMessage(sid, text);
+      } catch (err: unknown) {
+        // Session may have expired (404) — create a fresh one and retry once
+        const status = (err as { response?: { status?: number } })?.response?.status;
+        if (status === 404) {
+          setSessionId(null);
+          sessionStorage.removeItem(SESSION_KEY);
+          const newSession = await chatService.createSession();
+          sid = newSession.sessionId;
+          setSessionId(sid);
+          sessionStorage.setItem(SESSION_KEY, sid);
+          result = await chatService.sendMessage(sid, text);
+        } else {
+          throw err;
+        }
+      }
       setMessages(prev => [
         ...prev,
         { id: `a-${Date.now()}`, role: 'assistant', content: result.response },
