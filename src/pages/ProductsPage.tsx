@@ -2,21 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { productService } from '../services/productService';
 import type { Product, ProductCategory } from '../types';
-
-const CATEGORIES: { label: string; value: ProductCategory | 'ALL' }[] = [
-  { label: 'All', value: 'ALL' },
-  { label: 'Kits', value: 'KITS' },
-  { label: 'Boots', value: 'BOOTS' },
-  { label: 'Accessories', value: 'ACCESSORIES' },
-  { label: 'Balls', value: 'BALLS' },
-];
-
-const SORT_OPTIONS = [
-  { label: 'Newest', value: 'newest' },
-  { label: 'Price: Low → High', value: 'price-asc' },
-  { label: 'Price: High → Low', value: 'price-desc' },
-  { label: 'Name A → Z', value: 'name-asc' },
-];
+import { useLanguage } from '../context/LanguageContext';
 
 function ProductCardSkeleton() {
   return (
@@ -32,6 +18,7 @@ function ProductCardSkeleton() {
 }
 
 function ProductCard({ product }: { product: Product }) {
+  const { t } = useLanguage();
   const displayPrice = product.salePrice ?? product.price;
   const isOnSale = !!product.salePrice;
 
@@ -52,7 +39,7 @@ function ProductCard({ product }: { product: Product }) {
         )}
         {isOnSale && (
           <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded">
-            SALE
+            {t.productsSale}
           </span>
         )}
       </div>
@@ -79,6 +66,8 @@ function Pagination({
   totalPages: number;
   onPageChange: (page: number) => void;
 }) {
+  const { t } = useLanguage();
+
   if (totalPages <= 1) return null;
 
   const pages = Array.from({ length: totalPages }, (_, i) => i);
@@ -93,7 +82,7 @@ function Pagination({
         disabled={currentPage === 0}
         className="px-3 py-2 rounded-lg border border-gray-300 text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
       >
-        ← Prev
+        {t.productsPrev}
       </button>
 
       {visiblePages.map((p, i) => {
@@ -121,7 +110,7 @@ function Pagination({
         disabled={currentPage === totalPages - 1}
         className="px-3 py-2 rounded-lg border border-gray-300 text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
       >
-        Next →
+        {t.productsNext}
       </button>
     </div>
   );
@@ -131,6 +120,22 @@ export default function ProductsPage() {
   const { category: categoryParam } = useParams<{ category?: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { t } = useLanguage();
+
+  const CATEGORIES: { label: string; value: ProductCategory | 'ALL' }[] = [
+    { label: t.productsAll, value: 'ALL' },
+    { label: t.kits, value: 'KITS' },
+    { label: t.boots, value: 'BOOTS' },
+    { label: t.accessories, value: 'ACCESSORIES' },
+    { label: t.balls, value: 'BALLS' },
+  ];
+
+  const SORT_OPTIONS = [
+    { label: t.productsNewest, value: 'newest' },
+    { label: t.productsPriceLow, value: 'price-asc' },
+    { label: t.productsPriceHigh, value: 'price-desc' },
+    { label: t.productsNameAsc, value: 'name-asc' },
+  ];
 
   // Category comes from URL path segment (/products/:category), not search params
   const activeCategory: ProductCategory | 'ALL' = categoryParam
@@ -217,12 +222,12 @@ export default function ProductsPage() {
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900">
             {activeCategory === 'ALL'
-              ? 'All Products'
+              ? t.productsAllTitle
               : CATEGORIES.find((c) => c.value === activeCategory)?.label ?? activeCategory}
           </h1>
           {!isLoading && (
             <p className="text-gray-500 mt-1 text-sm">
-              {totalElements} {totalElements === 1 ? 'product' : 'products'}
+              {totalElements} {totalElements === 1 ? t.productsProductSingular : t.productsProductPlural}
             </p>
           )}
         </div>
@@ -251,14 +256,14 @@ export default function ProductsPage() {
               type="text"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              placeholder="Search products..."
+              placeholder={t.productsSearchPlaceholder}
               className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
             />
             <button
               type="submit"
               className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
             >
-              Search
+              {t.productsSearch}
             </button>
             {search && (
               <button
@@ -310,16 +315,16 @@ export default function ProductsPage() {
         ) : (
           <div className="flex flex-col items-center justify-center py-24 text-gray-400">
             <div className="text-6xl mb-4">🔍</div>
-            <p className="text-lg font-medium text-gray-500 mb-2">No products found</p>
+            <p className="text-lg font-medium text-gray-500 mb-2">{t.productsNotFound}</p>
             <p className="text-sm mb-6">
-              {search ? `No results for "${search}"` : 'Check back soon for new arrivals'}
+              {search ? <>{t.productsNoResultsPrefix}{search}{t.productsNoResultsSuffix}</> : t.productsCheckBack}
             </p>
             {(search || activeCategory !== 'ALL') && (
               <button
                 onClick={handleClearFilters}
                 className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700"
               >
-                Clear filters
+                {t.productsClearFilters}
               </button>
             )}
           </div>
