@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { productService } from '../services/productService';
 import { useCart } from '../hooks/useCart';
 import { useAuth } from '../hooks/useAuth';
+import { useLanguage } from '../context/LanguageContext';
 import type { Product } from '../types';
 
 function DetailSkeleton() {
@@ -29,18 +30,19 @@ function DetailSkeleton() {
   );
 }
 
-const CATEGORY_LABELS: Record<string, string> = {
-  KITS: 'Kits',
-  BOOTS: 'Boots',
-  ACCESSORIES: 'Accessories',
-  BALLS: 'Balls',
-};
-
 export default function ProductDetailPage() {
   const { slug } = useParams<{ category: string; slug: string }>();
   const navigate = useNavigate();
   const { addItem } = useCart();
   const { isAuthenticated } = useAuth();
+  const { t } = useLanguage();
+
+  const CATEGORY_LABELS: Record<string, string> = {
+    KITS: t.kits,
+    BOOTS: t.boots,
+    ACCESSORIES: t.accessories,
+    BALLS: t.balls,
+  };
 
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -116,20 +118,20 @@ export default function ProductDetailPage() {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
         <div className="text-6xl mb-4">⚠️</div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Something went wrong</h1>
-        <p className="text-gray-500 mb-6">Unable to load this product. Please try again.</p>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">{t.productErrorTitle}</h1>
+        <p className="text-gray-500 mb-6">{t.productErrorMessage}</p>
         <div className="flex items-center justify-center gap-3">
           <button
             onClick={() => window.location.reload()}
             className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition-colors"
           >
-            Try Again
+            {t.productTryAgain}
           </button>
           <Link
             to="/products"
             className="inline-flex items-center px-6 py-3 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors"
           >
-            ← Back to Products
+            {t.productBack}
           </Link>
         </div>
       </div>
@@ -140,13 +142,13 @@ export default function ProductDetailPage() {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
         <div className="text-6xl mb-4">😔</div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Product not found</h1>
-        <p className="text-gray-500 mb-6">This product may have been removed or the link is incorrect.</p>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">{t.productNotFound}</h1>
+        <p className="text-gray-500 mb-6">{t.productNotFoundMessage}</p>
         <Link
           to="/products"
           className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition-colors"
         >
-          ← Back to Products
+          {t.productBack}
         </Link>
       </div>
     );
@@ -162,7 +164,7 @@ export default function ProductDetailPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
-          <Link to="/" className="hover:text-green-600">Home</Link>
+          <Link to="/" className="hover:text-green-600">{t.productHome}</Link>
           <span>›</span>
           <Link to={`/products/${product.category.toLowerCase()}`} className="hover:text-green-600">
             {categoryLabel}
@@ -221,7 +223,7 @@ export default function ProductDetailPage() {
                 <>
                   <span className="text-xl text-gray-400 line-through">£{product.price.toFixed(2)}</span>
                   <span className="bg-red-100 text-red-600 text-sm font-bold px-2 py-0.5 rounded">
-                    SAVE £{(product.price - displayPrice).toFixed(2)}
+                    {t.productSavePrefix}{(product.price - displayPrice).toFixed(2)}
                   </span>
                 </>
               )}
@@ -229,11 +231,11 @@ export default function ProductDetailPage() {
 
             {/* Stock indicator */}
             {isOutOfStock && (
-              <div className="mb-4 text-red-600 font-medium text-sm">Out of stock</div>
+              <div className="mb-4 text-red-600 font-medium text-sm">{t.productOutOfStockIndicator}</div>
             )}
             {isLowStock && (
               <div className="mb-4 text-amber-600 font-medium text-sm">
-                Only {product.stock} left in stock!
+                {t.productLowStockPrefix}{product.stock}{t.productLowStockSuffix}
               </div>
             )}
 
@@ -244,9 +246,9 @@ export default function ProductDetailPage() {
             {product.sizes.length > 0 && (
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-sm font-semibold text-gray-700">Size</p>
+                  <p className="text-sm font-semibold text-gray-700">{t.productSizeLabel}</p>
                   {selectedSize && (
-                    <span className="text-sm text-green-600 font-medium">Selected: {selectedSize}</span>
+                    <span className="text-sm text-green-600 font-medium">{t.productSelectedSize}{selectedSize}</span>
                   )}
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -268,14 +270,14 @@ export default function ProductDetailPage() {
                   ))}
                 </div>
                 {sizeError && (
-                  <p className="text-red-500 text-sm mt-2">Please select a size before adding to cart.</p>
+                  <p className="text-red-500 text-sm mt-2">{t.productSizeError}</p>
                 )}
               </div>
             )}
 
             {/* Quantity selector */}
             <div className="mb-6">
-              <p className="text-sm font-semibold text-gray-700 mb-2">Quantity</p>
+              <p className="text-sm font-semibold text-gray-700 mb-2">{t.productQuantityLabel}</p>
               <div className="flex items-center gap-0 w-fit border border-gray-300 rounded-lg overflow-hidden">
                 <button
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
@@ -312,23 +314,19 @@ export default function ProductDetailPage() {
               }`}
             >
               {addingToCart
-                ? 'Adding...'
+                ? t.productAdding
                 : addedToCart
-                ? '✓ Added to Cart!'
+                ? t.productAdded
                 : cartError
-                ? 'Failed to add — try again'
+                ? t.productAddFailed
                 : isOutOfStock
-                ? 'Out of Stock'
-                : 'Add to Cart'}
+                ? t.productOutOfStock
+                : t.productAddToCart}
             </button>
 
             {!isAuthenticated && !isOutOfStock && (
               <p className="text-center text-sm text-gray-500 mt-2">
-                You'll be asked to{' '}
-                <Link to="/login" className="text-green-600 hover:underline">
-                  sign in
-                </Link>{' '}
-                to add items to your cart.
+                {t.productSignInPrefix}<Link to="/login" className="text-green-600 hover:underline">{t.productSignIn}</Link>{t.productSignInSuffix}
               </p>
             )}
           </div>
