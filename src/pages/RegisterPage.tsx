@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { PremierSportLogo } from '../components/PremierSportLogo';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -18,17 +19,18 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { t } = useLanguage();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
 
     if (form.password !== form.confirmPassword) {
-      setError('Passwords do not match.');
+      setError(t.registerPasswordMismatch);
       return;
     }
     if (form.password.length < 8) {
-      setError('Password must be at least 8 characters long.');
+      setError(t.registerPasswordTooShort);
       return;
     }
 
@@ -44,9 +46,9 @@ export default function RegisterPage() {
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } })?.response?.status;
       if (status === 409) {
-        setError('An account with this email already exists. Please sign in or use a different email.');
+        setError(t.registerAccountExists);
       } else {
-        setError('Registration failed. Please try again.');
+        setError(t.registerFailed);
       }
     } finally {
       setIsLoading(false);
@@ -65,8 +67,8 @@ export default function RegisterPage() {
             <PremierSportLogo className="w-10 h-10" />
             <span className="text-2xl font-bold text-gray-900">Premier Sport</span>
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900 mt-6 mb-1">Create an account</h1>
-          <p className="text-gray-500 text-sm">Join thousands of football fans</p>
+          <h1 className="text-2xl font-bold text-gray-900 mt-6 mb-1">{t.registerTitle}</h1>
+          <p className="text-gray-500 text-sm">{t.registerSubtitle}</p>
         </div>
 
         {/* Form card */}
@@ -81,7 +83,7 @@ export default function RegisterPage() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  First name
+                  {t.registerFirstNameLabel}
                 </label>
                 <input
                   id="firstName"
@@ -90,12 +92,12 @@ export default function RegisterPage() {
                   value={form.firstName}
                   onChange={(e) => setField('firstName', e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
-                  placeholder="John"
+                  placeholder={t.registerFirstNamePlaceholder}
                 />
               </div>
               <div>
                 <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Last name
+                  {t.registerLastNameLabel}
                 </label>
                 <input
                   id="lastName"
@@ -104,14 +106,14 @@ export default function RegisterPage() {
                   value={form.lastName}
                   onChange={(e) => setField('lastName', e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
-                  placeholder="Smith"
+                  placeholder={t.registerLastNamePlaceholder}
                 />
               </div>
             </div>
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
-                Email address
+                {t.registerEmailLabel}
               </label>
               <input
                 id="email"
@@ -120,13 +122,13 @@ export default function RegisterPage() {
                 value={form.email}
                 onChange={(e) => setField('email', e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
-                placeholder="you@example.com"
+                placeholder={t.registerEmailPlaceholder}
               />
             </div>
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5">
-                Password
+                {t.registerPasswordLabel}
               </label>
               <div className="relative">
                 <input
@@ -137,14 +139,14 @@ export default function RegisterPage() {
                   value={form.password}
                   onChange={(e) => setField('password', e.target.value)}
                   className="w-full px-4 py-3 pr-11 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
-                  placeholder="Min. 8 characters"
+                  placeholder={t.registerPasswordPlaceholder}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
                   className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
                   tabIndex={-1}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  aria-label={showPassword ? t.registerHidePassword : t.registerShowPassword}
                 >
                   {showPassword ? (
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -162,7 +164,7 @@ export default function RegisterPage() {
 
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1.5">
-                Confirm password
+                {t.registerConfirmPasswordLabel}
               </label>
               <div className="relative">
                 <input
@@ -172,14 +174,14 @@ export default function RegisterPage() {
                   value={form.confirmPassword}
                   onChange={(e) => setField('confirmPassword', e.target.value)}
                   className="w-full px-4 py-3 pr-11 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
-                  placeholder="••••••••"
+                  placeholder={t.registerConfirmPasswordPlaceholder}
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword((v) => !v)}
                   className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
                   tabIndex={-1}
-                  aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                  aria-label={showConfirmPassword ? t.registerHidePassword : t.registerShowPassword}
                 >
                   {showConfirmPassword ? (
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -200,15 +202,15 @@ export default function RegisterPage() {
               disabled={isLoading}
               className="w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {isLoading ? 'Creating account...' : 'Create account'}
+              {isLoading ? t.registerCreating : t.registerCreate}
             </button>
           </form>
         </div>
 
         <p className="text-center text-sm text-gray-500 mt-6">
-          Already have an account?{' '}
+          {t.registerHasAccount}
           <Link to="/login" className="font-semibold text-green-600 hover:text-green-700">
-            Sign in
+            {t.registerSignInLink}
           </Link>
         </p>
       </div>
