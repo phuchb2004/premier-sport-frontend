@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { Layout } from '../components/layout/Layout';
 import { productService } from '../services/productService';
 import type { Product, ProductCategory } from '../types';
 
@@ -213,8 +212,7 @@ export default function ProductsPage() {
   }
 
   return (
-    <Layout>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Page header */}
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900">
@@ -327,6 +325,5 @@ export default function ProductsPage() {
           </div>
         )}
       </div>
-    </Layout>
   );
 }

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Layout } from '../components/layout/Layout';
 import { productService } from '../services/productService';
 import { useCart } from '../hooks/useCart';
 import { useAuth } from '../hooks/useAuth';
@@ -49,6 +48,7 @@ export default function ProductDetailPage() {
   const [fetchError, setFetchError] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [quantity, setQuantity] = useState(1);
   const [sizeError, setSizeError] = useState(false);
   const [addingToCart, setAddingToCart] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
@@ -65,6 +65,7 @@ export default function ProductDetailPage() {
         setProduct(p);
         setSelectedImage(0);
         setSelectedSize(null);
+        setQuantity(1);
       })
       .catch((err) => {
         if (err?.response?.status === 404) {
@@ -97,7 +98,7 @@ export default function ProductDetailPage() {
         productName: product.name,
         productImage: product.images[0] ?? '',
         size: selectedSize ?? 'ONE SIZE',
-        quantity: 1,
+        quantity,
       });
       setAddedToCart(true);
       setTimeout(() => setAddedToCart(false), 2000);
@@ -109,49 +110,45 @@ export default function ProductDetailPage() {
     }
   }
 
-  if (isLoading) return <Layout><DetailSkeleton /></Layout>;
+  if (isLoading) return <DetailSkeleton />;
 
   if (fetchError) {
     return (
-      <Layout>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
-          <div className="text-6xl mb-4">⚠️</div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Something went wrong</h1>
-          <p className="text-gray-500 mb-6">Unable to load this product. Please try again.</p>
-          <div className="flex items-center justify-center gap-3">
-            <button
-              onClick={() => window.location.reload()}
-              className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition-colors"
-            >
-              Try Again
-            </button>
-            <Link
-              to="/products"
-              className="inline-flex items-center px-6 py-3 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors"
-            >
-              ← Back to Products
-            </Link>
-          </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+        <div className="text-6xl mb-4">⚠️</div>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">Something went wrong</h1>
+        <p className="text-gray-500 mb-6">Unable to load this product. Please try again.</p>
+        <div className="flex items-center justify-center gap-3">
+          <button
+            onClick={() => window.location.reload()}
+            className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition-colors"
+          >
+            Try Again
+          </button>
+          <Link
+            to="/products"
+            className="inline-flex items-center px-6 py-3 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors"
+          >
+            ← Back to Products
+          </Link>
         </div>
-      </Layout>
+      </div>
     );
   }
 
   if (notFound || !product) {
     return (
-      <Layout>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
-          <div className="text-6xl mb-4">😔</div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Product not found</h1>
-          <p className="text-gray-500 mb-6">This product may have been removed or the link is incorrect.</p>
-          <Link
-            to="/products"
-            className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition-colors"
-          >
-            ← Back to Products
-          </Link>
-        </div>
-      </Layout>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+        <div className="text-6xl mb-4">😔</div>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">Product not found</h1>
+        <p className="text-gray-500 mb-6">This product may have been removed or the link is incorrect.</p>
+        <Link
+          to="/products"
+          className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition-colors"
+        >
+          ← Back to Products
+        </Link>
+      </div>
     );
   }
 
@@ -162,8 +159,7 @@ export default function ProductDetailPage() {
   const categoryLabel = CATEGORY_LABELS[product.category] ?? product.category;
 
   return (
-    <Layout>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
           <Link to="/" className="hover:text-green-600">Home</Link>
@@ -277,6 +273,30 @@ export default function ProductDetailPage() {
               </div>
             )}
 
+            {/* Quantity selector */}
+            <div className="mb-6">
+              <p className="text-sm font-semibold text-gray-700 mb-2">Quantity</p>
+              <div className="flex items-center gap-0 w-fit border border-gray-300 rounded-lg overflow-hidden">
+                <button
+                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                  disabled={quantity <= 1}
+                  className="w-10 h-10 flex items-center justify-center text-lg text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                >
+                  −
+                </button>
+                <span className="w-12 h-10 flex items-center justify-center text-sm font-semibold border-x border-gray-300">
+                  {quantity}
+                </span>
+                <button
+                  onClick={() => setQuantity((q) => Math.min(product.stock || 99, q + 1))}
+                  disabled={quantity >= (product.stock || 99)}
+                  className="w-10 h-10 flex items-center justify-center text-lg text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
             {/* Add to cart */}
             <button
               onClick={handleAddToCart}
@@ -314,6 +334,5 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </div>
-    </Layout>
   );
 }
