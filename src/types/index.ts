@@ -10,6 +10,7 @@ export interface User {
 }
 
 export interface Address {
+  id?: string;
   street: string;
   city: string;
   state: string;
@@ -69,6 +70,7 @@ export interface Order {
 
 export interface AuthResponse {
   accessToken: string;
+  refreshToken: string;
   tokenType: string;
   user: User;
 }

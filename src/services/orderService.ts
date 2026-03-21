@@ -27,8 +27,8 @@ export const orderService = {
     return response.data;
   },
 
-  async createPaymentIntent(orderId: string): Promise<{ clientSecret: string }> {
-    const response = await api.post<{ clientSecret: string }>(`/orders/${orderId}/pay`);
+  async confirmPayment(orderId: string, paymentMethod: 'VIETQR' | 'MOMO'): Promise<Order> {
+    const response = await api.post<Order>(`/orders/${orderId}/confirm-payment`, { paymentMethod });
     return response.data;
   },
 };
