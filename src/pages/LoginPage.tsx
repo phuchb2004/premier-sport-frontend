@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { PremierSportLogo } from '../components/PremierSportLogo';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -14,6 +15,8 @@ export default function LoginPage() {
       ? (location.state as { from: unknown }).from
       : undefined;
   const from = typeof rawFrom === 'string' ? rawFrom : '/';
+
+  const { t } = useLanguage();
 
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
@@ -28,7 +31,7 @@ export default function LoginPage() {
       await login(form);
       navigate(from, { replace: true });
     } catch {
-      setError('Invalid email or password. Please try again.');
+      setError(t.loginInvalidCredentials);
     } finally {
       setIsLoading(false);
     }
@@ -43,8 +46,8 @@ export default function LoginPage() {
             <PremierSportLogo className="w-10 h-10" />
             <span className="text-2xl font-bold text-gray-900">Premier Sport</span>
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900 mt-6 mb-1">Welcome back</h1>
-          <p className="text-gray-500 text-sm">Sign in to your account to continue</p>
+          <h1 className="text-2xl font-bold text-gray-900 mt-6 mb-1">{t.loginWelcomeTitle}</h1>
+          <p className="text-gray-500 text-sm">{t.loginWelcomeSubtitle}</p>
         </div>
 
         {/* Form card */}
@@ -58,7 +61,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
-                Email address
+                {t.loginEmailLabel}
               </label>
               <input
                 id="email"
@@ -68,13 +71,13 @@ export default function LoginPage() {
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
-                placeholder="you@example.com"
+                placeholder={t.loginEmailPlaceholder}
               />
             </div>
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5">
-                Password
+                {t.loginPasswordLabel}
               </label>
               <div className="relative">
                 <input
@@ -85,14 +88,14 @@ export default function LoginPage() {
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
                   className="w-full px-4 py-3 pr-11 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
-                  placeholder="••••••••"
+                  placeholder={t.loginPasswordPlaceholder}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
                   className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
                   tabIndex={-1}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  aria-label={showPassword ? t.loginHidePassword : t.loginShowPassword}
                 >
                   {showPassword ? (
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -113,15 +116,15 @@ export default function LoginPage() {
               disabled={isLoading}
               className="w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {isLoading ? 'Signing in...' : 'Sign in'}
+              {isLoading ? t.loginSigningIn : t.loginSignIn}
             </button>
           </form>
         </div>
 
         <p className="text-center text-sm text-gray-500 mt-6">
-          Don't have an account?{' '}
+          {t.loginNoAccount}{' '}
           <Link to="/register" className="font-semibold text-green-600 hover:text-green-700">
-            Sign up
+            {t.loginSignUpLink}
           </Link>
         </p>
       </div>
