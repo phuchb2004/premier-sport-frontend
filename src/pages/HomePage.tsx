@@ -1,43 +1,172 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { Layout } from '../components/layout/Layout';
+import { useEffect, useRef, useState } from 'react';
 import { productService } from '../services/productService';
 import type { Product } from '../types';
+import { useLanguage } from '../context/LanguageContext';
 
-const CATEGORIES = [
+const BANNER_SLIDES = [
   {
-    label: 'Kits',
-    value: 'KITS',
-    path: '/products/kits',
-    description: 'Full match kits & training wear',
-    emoji: '👕',
-    color: 'from-blue-500 to-blue-700',
-  },
-  {
-    label: 'Boots',
-    value: 'BOOTS',
-    path: '/products/boots',
-    description: 'Performance football boots',
-    emoji: '👟',
-    color: 'from-red-500 to-red-700',
-  },
-  {
-    label: 'Accessories',
-    value: 'ACCESSORIES',
-    path: '/products/accessories',
-    description: 'Shin pads, gloves & more',
-    emoji: '🧤',
-    color: 'from-yellow-500 to-yellow-700',
-  },
-  {
-    label: 'Balls',
-    value: 'BALLS',
-    path: '/products/balls',
-    description: 'Match & training balls',
+    gradient: 'from-green-900 via-green-800 to-green-600',
+    accentColor: 'text-green-300',
+    badge: '🏆 New Season 2025',
+    title1: 'Play Like a',
+    title2: 'Champion',
+    subtitle: 'Premium football gear for every level — kits, boots, balls & accessories.',
+    cta: { label: 'Shop Now', href: '/products' },
+    cta2: { label: 'Learn More', href: '/about' },
     emoji: '⚽',
-    color: 'from-green-500 to-green-700',
+    pattern: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.05) 10px, rgba(255,255,255,.05) 20px)',
+  },
+  {
+    gradient: 'from-red-900 via-red-800 to-red-600',
+    accentColor: 'text-red-300',
+    badge: '👟 Staff Picks',
+    title1: 'Find Your',
+    title2: 'Perfect Boots',
+    subtitle: 'Grip the pitch with pro-grade football boots trusted by champions worldwide.',
+    cta: { label: 'Shop Boots', href: '/products/boots' },
+    cta2: null,
+    emoji: '👟',
+    pattern: 'repeating-linear-gradient(135deg, transparent, transparent 12px, rgba(255,255,255,.04) 12px, rgba(255,255,255,.04) 24px)',
+  },
+  {
+    gradient: 'from-blue-900 via-blue-800 to-blue-600',
+    accentColor: 'text-blue-300',
+    badge: '👕 Kits Collection',
+    title1: 'Dress Like',
+    title2: 'a Pro',
+    subtitle: 'Authentic kits and jerseys from your favourite clubs and national teams.',
+    cta: { label: 'Shop Kits', href: '/products/kits' },
+    cta2: null,
+    emoji: '👕',
+    pattern: 'repeating-linear-gradient(60deg, transparent, transparent 8px, rgba(255,255,255,.04) 8px, rgba(255,255,255,.04) 16px)',
+  },
+  {
+    gradient: 'from-yellow-700 via-yellow-600 to-orange-500',
+    accentColor: 'text-yellow-200',
+    badge: '⚽ Featured Balls',
+    title1: 'The Perfect',
+    title2: 'Match Ball',
+    subtitle: 'From training to tournament — discover balls built for performance and precision.',
+    cta: { label: 'Shop Balls', href: '/products/balls' },
+    cta2: null,
+    emoji: '⚽',
+    pattern: 'repeating-linear-gradient(30deg, transparent, transparent 10px, rgba(255,255,255,.04) 10px, rgba(255,255,255,.04) 20px)',
   },
 ];
+
+const SLIDE_INTERVAL = 5000;
+
+function HeroBanner() {
+  const [current, setCurrent] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const total = BANNER_SLIDES.length;
+
+  const goTo = (index: number) => setCurrent((index + total) % total);
+
+  useEffect(() => {
+    if (paused) return;
+    intervalRef.current = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % total);
+    }, SLIDE_INTERVAL);
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, [paused, total]);
+
+  return (
+    <section
+      className="relative overflow-hidden"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      {/* Slides track */}
+      <div
+        className="flex transition-transform duration-700 ease-in-out"
+        style={{ transform: `translateX(-${current * 100}%)` }}
+      >
+        {BANNER_SLIDES.map((slide, i) => (
+          <div
+            key={i}
+            className={`min-w-full relative bg-gradient-to-br ${slide.gradient} text-white overflow-hidden`}
+          >
+            {/* Background pattern */}
+            <div className="absolute inset-0 opacity-100" style={{ backgroundImage: slide.pattern }} />
+
+            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+              <div className="max-w-2xl">
+                {/* Badge */}
+                <span className="inline-block bg-white/20 backdrop-blur-sm text-white text-sm font-medium px-4 py-1.5 rounded-full mb-6">
+                  {slide.badge}
+                </span>
+                <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+                  {slide.title1}<br />
+                  <span className={slide.accentColor}>{slide.title2}</span>
+                </h1>
+                <p className="text-lg md:text-xl text-white/80 mb-8 leading-relaxed">
+                  {slide.subtitle}
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Link
+                    to={slide.cta.href}
+                    className="inline-flex items-center justify-center px-8 py-3 bg-white text-gray-900 font-bold rounded-xl hover:bg-white/90 transition-colors text-base"
+                  >
+                    {slide.cta.label}
+                  </Link>
+                  {slide.cta2 && (
+                    <Link
+                      to={slide.cta2.href}
+                      className="inline-flex items-center justify-center px-8 py-3 border-2 border-white text-white font-bold rounded-xl hover:bg-white/10 transition-colors text-base"
+                    >
+                      {slide.cta2.label}
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Decorative emoji */}
+            <div className="absolute right-0 bottom-0 text-[18rem] opacity-5 leading-none select-none pointer-events-none">
+              {slide.emoji}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Prev / Next arrows */}
+      <button
+        onClick={() => goTo(current - 1)}
+        className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-white/20 hover:bg-white/40 text-white rounded-full backdrop-blur-sm transition-colors z-10"
+        aria-label="Previous slide"
+      >
+        ‹
+      </button>
+      <button
+        onClick={() => goTo(current + 1)}
+        className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-white/20 hover:bg-white/40 text-white rounded-full backdrop-blur-sm transition-colors z-10"
+        aria-label="Next slide"
+      >
+        ›
+      </button>
+
+      {/* Dot indicators */}
+      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
+        {BANNER_SLIDES.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => goTo(i)}
+            className={`transition-all duration-300 rounded-full ${
+              i === current
+                ? 'w-6 h-2.5 bg-white'
+                : 'w-2.5 h-2.5 bg-white/40 hover:bg-white/70'
+            }`}
+            aria-label={`Go to slide ${i + 1}`}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
 
 function ProductCard({ product }: { product: Product }) {
   const displayPrice = product.salePrice ?? product.price;
@@ -74,9 +203,23 @@ function ProductCard({ product }: { product: Product }) {
 }
 
 export default function HomePage() {
+  const { t } = useLanguage();
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [fetchError, setFetchError] = useState(false);
+
+  const CATEGORIES = [
+    { label: t.kits, value: 'KITS', path: '/products/kits', description: t.kitsDesc, emoji: '👕', color: 'from-blue-500 to-blue-700' },
+    { label: t.boots, value: 'BOOTS', path: '/products/boots', description: t.bootsDesc, emoji: '👟', color: 'from-red-500 to-red-700' },
+    { label: t.accessories, value: 'ACCESSORIES', path: '/products/accessories', description: t.accessoriesDesc, emoji: '🧤', color: 'from-yellow-500 to-yellow-700' },
+    { label: t.balls, value: 'BALLS', path: '/products/balls', description: t.ballsDesc, emoji: '⚽', color: 'from-green-500 to-green-700' },
+  ];
+
+  const TRUST_BADGES = [
+    { icon: '🚚', title: t.freeDelivery, desc: t.freeDeliveryDesc },
+    { icon: '↩️', title: t.easyReturns, desc: t.easyReturnsDesc },
+    { icon: '🔒', title: t.securePayment, desc: t.securePaymentDesc },
+  ];
 
   useEffect(() => {
     productService.getFeaturedProducts()
@@ -86,49 +229,14 @@ export default function HomePage() {
   }, []);
 
   return (
-    <Layout>
-      {/* Hero section */}
-      <section className="relative bg-gradient-to-br from-green-800 to-green-600 text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.1) 10px, rgba(255,255,255,.1) 20px)'
-          }} />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
-          <div className="max-w-2xl">
-            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
-              Play Like a<br />
-              <span className="text-green-300">Champion</span>
-            </h1>
-            <p className="text-lg md:text-xl text-green-100 mb-8 leading-relaxed">
-              Premium football gear for every level. From grassroots to professional —
-              find your perfect kit, boots, and equipment.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link
-                to="/products"
-                className="inline-flex items-center justify-center px-8 py-3 bg-white text-green-700 font-bold rounded-xl hover:bg-green-50 transition-colors text-base"
-              >
-                Shop Now
-              </Link>
-              <Link
-                to="/about"
-                className="inline-flex items-center justify-center px-8 py-3 border-2 border-white text-white font-bold rounded-xl hover:bg-white/10 transition-colors text-base"
-              >
-                Learn More
-              </Link>
-            </div>
-          </div>
-        </div>
-        {/* Decorative football */}
-        <div className="absolute right-0 bottom-0 text-[20rem] opacity-5 leading-none select-none">⚽</div>
-      </section>
+    <>
+      <HeroBanner />
 
       {/* Category grid */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-gray-900 mb-3">Shop by Category</h2>
-          <p className="text-gray-500">Everything you need on and off the pitch</p>
+          <h2 className="text-3xl font-bold text-gray-900 mb-3">{t.shopByCategory}</h2>
+          <p className="text-gray-500">{t.categorySubtitle}</p>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {CATEGORIES.map((cat) => (
@@ -153,11 +261,11 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-10">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-1">Featured Products</h2>
-              <p className="text-gray-500">Hand-picked for performance and style</p>
+              <h2 className="text-3xl font-bold text-gray-900 mb-1">{t.featuredProducts}</h2>
+              <p className="text-gray-500">{t.featuredSubtitle}</p>
             </div>
             <Link to="/products" className="text-green-600 font-semibold hover:text-green-700 text-sm">
-              View all →
+              {t.viewAll}
             </Link>
           </div>
 
@@ -176,7 +284,7 @@ export default function HomePage() {
             </div>
           ) : fetchError ? (
             <div className="text-center py-12 text-gray-500">
-              <p>Unable to load featured products. Please try again later.</p>
+              <p>{t.loadingError}</p>
             </div>
           ) : featuredProducts.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -187,7 +295,7 @@ export default function HomePage() {
           ) : (
             <div className="text-center py-12 text-gray-500">
               <div className="text-5xl mb-4">⚽</div>
-              <p>Featured products coming soon</p>
+              <p>{t.featuredEmpty}</p>
             </div>
           )}
         </div>
@@ -196,11 +304,7 @@ export default function HomePage() {
       {/* Trust badges */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          {[
-            { icon: '🚚', title: 'Free Delivery', desc: 'On orders over £50' },
-            { icon: '↩️', title: 'Easy Returns', desc: '30-day return policy' },
-            { icon: '🔒', title: 'Secure Payment', desc: 'Powered by Stripe' },
-          ].map((badge) => (
+          {TRUST_BADGES.map((badge) => (
             <div key={badge.title} className="flex items-center gap-4 p-6 bg-white border border-gray-200 rounded-xl">
               <span className="text-3xl">{badge.icon}</span>
               <div>
@@ -211,6 +315,6 @@ export default function HomePage() {
           ))}
         </div>
       </section>
-    </Layout>
+    </>
   );
 }
