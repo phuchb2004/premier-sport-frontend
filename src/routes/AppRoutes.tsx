@@ -1,9 +1,14 @@
 import { lazy, Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Outlet } from 'react-router-dom';
 import { ProtectedRoute } from './ProtectedRoute';
 import { AdminRoute } from './AdminRoute';
 import { Spinner } from '../components/Spinner';
 import { AdminLayout } from '../components/admin/AdminLayout';
+import { Layout } from '../components/layout/Layout';
+
+function LayoutRoute() {
+  return <Layout><Outlet /></Layout>;
+}
 
 // Public pages
 const HomePage = lazy(() => import('../pages/HomePage'));
@@ -18,6 +23,7 @@ const CartPage = lazy(() => import('../pages/CartPage'));
 const CheckoutPage = lazy(() => import('../pages/CheckoutPage'));
 const OrderHistoryPage = lazy(() => import('../pages/OrderHistoryPage'));
 const OrderConfirmationPage = lazy(() => import('../pages/OrderConfirmationPage'));
+const ProfilePage = lazy(() => import('../pages/ProfilePage'));
 
 // Admin pages
 const AdminDashboardPage = lazy(() => import('../pages/AdminDashboardPage'));
@@ -31,23 +37,27 @@ export function AppRoutes() {
   return (
     <Suspense fallback={<Spinner />}>
       <Routes>
-        {/* Public routes */}
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/about" element={<AboutPage />} />
+        {/* All non-admin routes wrapped in Layout (Header + Footer) */}
+        <Route element={<LayoutRoute />}>
+          {/* Public routes */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/about" element={<AboutPage />} />
 
-        {/* Product routes */}
-        <Route path="/products" element={<ProductsPage />} />
-        <Route path="/products/:category" element={<ProductsPage />} />
-        <Route path="/products/:category/:slug" element={<ProductDetailPage />} />
+          {/* Product routes */}
+          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/products/:category" element={<ProductsPage />} />
+          <Route path="/products/:category/:slug" element={<ProductDetailPage />} />
 
-        {/* Protected user routes */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/orders" element={<OrderHistoryPage />} />
-          <Route path="/orders/:id" element={<OrderConfirmationPage />} />
+          {/* Protected user routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/orders" element={<OrderHistoryPage />} />
+            <Route path="/orders/:id" element={<OrderConfirmationPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+          </Route>
         </Route>
 
         {/* Admin routes — wrapped in AdminLayout */}
