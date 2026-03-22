@@ -2,18 +2,21 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { orderService } from '../services/orderService';
 import { STATUS_BADGE } from '../utils/orderUtils';
+import { useLanguage } from '../context/LanguageContext';
 import type { Order } from '../types';
 
 export default function OrderHistoryPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const { t } = useLanguage();
 
   useEffect(() => {
     orderService.getMyOrders()
       .then(setOrders)
-      .catch(() => setError('Failed to load orders.'))
+      .catch(() => setError(t.orderHistoryLoadError))
       .finally(() => setLoading(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (loading) {
@@ -34,17 +37,17 @@ export default function OrderHistoryPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Order History</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">{t.orderHistoryTitle}</h1>
 
       {orders.length === 0 ? (
         <div className="text-center py-16">
           <div className="text-5xl mb-4">📦</div>
-          <p className="text-gray-500 mb-6">You haven't placed any orders yet.</p>
+          <p className="text-gray-500 mb-6">{t.orderHistoryEmpty}</p>
           <Link
             to="/products"
             className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700"
           >
-            Start Shopping
+            {t.orderHistoryStartShopping}
           </Link>
         </div>
       ) : (
@@ -52,11 +55,11 @@ export default function OrderHistoryPage() {
           <table className="w-full text-sm">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="text-left px-4 py-3 font-semibold text-gray-700">Order #</th>
-                <th className="text-left px-4 py-3 font-semibold text-gray-700">Date</th>
-                <th className="text-left px-4 py-3 font-semibold text-gray-700">Items</th>
-                <th className="text-right px-4 py-3 font-semibold text-gray-700">Total</th>
-                <th className="text-left px-4 py-3 font-semibold text-gray-700">Status</th>
+                <th className="text-left px-4 py-3 font-semibold text-gray-700">{t.orderHistoryOrderNumber}</th>
+                <th className="text-left px-4 py-3 font-semibold text-gray-700">{t.orderHistoryDate}</th>
+                <th className="text-left px-4 py-3 font-semibold text-gray-700">{t.orderHistoryItems}</th>
+                <th className="text-right px-4 py-3 font-semibold text-gray-700">{t.orderHistoryTotal}</th>
+                <th className="text-left px-4 py-3 font-semibold text-gray-700">{t.orderHistoryStatus}</th>
                 <th className="px-4 py-3" />
               </tr>
             </thead>
@@ -71,7 +74,7 @@ export default function OrderHistoryPage() {
                   <tr key={order.id} className="hover:bg-gray-50">
                     <td className="px-4 py-3 font-medium text-gray-900">{order.orderNumber}</td>
                     <td className="px-4 py-3 text-gray-600">{date}</td>
-                    <td className="px-4 py-3 text-gray-600">{order.items.length} item{order.items.length !== 1 ? 's' : ''}</td>
+                    <td className="px-4 py-3 text-gray-600">{order.items.length} {order.items.length === 1 ? t.orderHistoryItemSingular : t.orderHistoryItemPlural}</td>
                     <td className="px-4 py-3 text-right font-medium text-gray-900">£{order.total.toFixed(2)}</td>
                     <td className="px-4 py-3">
                       <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${badge.classes}`}>
@@ -83,7 +86,7 @@ export default function OrderHistoryPage() {
                         to={`/orders/${order.id}`}
                         className="text-blue-600 hover:underline font-medium"
                       >
-                        View
+                        {t.orderHistoryView}
                       </Link>
                     </td>
                   </tr>

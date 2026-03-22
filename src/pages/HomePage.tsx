@@ -4,61 +4,62 @@ import { productService } from '../services/productService';
 import type { Product } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 
-const BANNER_SLIDES = [
-  {
-    gradient: 'from-green-900 via-green-800 to-green-600',
-    accentColor: 'text-green-300',
-    badge: '🏆 New Season 2025',
-    title1: 'Play Like a',
-    title2: 'Champion',
-    subtitle: 'Premium football gear for every level — kits, boots, balls & accessories.',
-    cta: { label: 'Shop Now', href: '/products' },
-    cta2: { label: 'Learn More', href: '/about' },
-    emoji: '⚽',
-    pattern: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.05) 10px, rgba(255,255,255,.05) 20px)',
-  },
-  {
-    gradient: 'from-red-900 via-red-800 to-red-600',
-    accentColor: 'text-red-300',
-    badge: '👟 Staff Picks',
-    title1: 'Find Your',
-    title2: 'Perfect Boots',
-    subtitle: 'Grip the pitch with pro-grade football boots trusted by champions worldwide.',
-    cta: { label: 'Shop Boots', href: '/products/boots' },
-    cta2: null,
-    emoji: '👟',
-    pattern: 'repeating-linear-gradient(135deg, transparent, transparent 12px, rgba(255,255,255,.04) 12px, rgba(255,255,255,.04) 24px)',
-  },
-  {
-    gradient: 'from-blue-900 via-blue-800 to-blue-600',
-    accentColor: 'text-blue-300',
-    badge: '👕 Kits Collection',
-    title1: 'Dress Like',
-    title2: 'a Pro',
-    subtitle: 'Authentic kits and jerseys from your favourite clubs and national teams.',
-    cta: { label: 'Shop Kits', href: '/products/kits' },
-    cta2: null,
-    emoji: '👕',
-    pattern: 'repeating-linear-gradient(60deg, transparent, transparent 8px, rgba(255,255,255,.04) 8px, rgba(255,255,255,.04) 16px)',
-  },
-  {
-    gradient: 'from-yellow-700 via-yellow-600 to-orange-500',
-    accentColor: 'text-yellow-200',
-    badge: '⚽ Featured Balls',
-    title1: 'The Perfect',
-    title2: 'Match Ball',
-    subtitle: 'From training to tournament — discover balls built for performance and precision.',
-    cta: { label: 'Shop Balls', href: '/products/balls' },
-    cta2: null,
-    emoji: '⚽',
-    pattern: 'repeating-linear-gradient(30deg, transparent, transparent 10px, rgba(255,255,255,.04) 10px, rgba(255,255,255,.04) 20px)',
-  },
-];
-
 const SLIDE_INTERVAL = 5000;
 
 function HeroBanner() {
+  const { t } = useLanguage();
   const [current, setCurrent] = useState(0);
+
+  const BANNER_SLIDES = [
+    {
+      gradient: 'from-green-900 via-green-800 to-green-600',
+      accentColor: 'text-green-300',
+      badge: t.bannerSlide1Badge,
+      title1: t.bannerSlide1Title1,
+      title2: t.bannerSlide1Title2,
+      subtitle: t.bannerSlide1Subtitle,
+      cta: { label: t.bannerSlide1Cta, href: '/products' },
+      cta2: { label: t.bannerSlide1Cta2, href: '/about' },
+      emoji: '⚽',
+      pattern: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.05) 10px, rgba(255,255,255,.05) 20px)',
+    },
+    {
+      gradient: 'from-red-900 via-red-800 to-red-600',
+      accentColor: 'text-red-300',
+      badge: t.bannerSlide2Badge,
+      title1: t.bannerSlide2Title1,
+      title2: t.bannerSlide2Title2,
+      subtitle: t.bannerSlide2Subtitle,
+      cta: { label: t.bannerSlide2Cta, href: '/products/boots' },
+      cta2: null,
+      emoji: '👟',
+      pattern: 'repeating-linear-gradient(135deg, transparent, transparent 12px, rgba(255,255,255,.04) 12px, rgba(255,255,255,.04) 24px)',
+    },
+    {
+      gradient: 'from-blue-900 via-blue-800 to-blue-600',
+      accentColor: 'text-blue-300',
+      badge: t.bannerSlide3Badge,
+      title1: t.bannerSlide3Title1,
+      title2: t.bannerSlide3Title2,
+      subtitle: t.bannerSlide3Subtitle,
+      cta: { label: t.bannerSlide3Cta, href: '/products/kits' },
+      cta2: null,
+      emoji: '👕',
+      pattern: 'repeating-linear-gradient(60deg, transparent, transparent 8px, rgba(255,255,255,.04) 8px, rgba(255,255,255,.04) 16px)',
+    },
+    {
+      gradient: 'from-yellow-700 via-yellow-600 to-orange-500',
+      accentColor: 'text-yellow-200',
+      badge: t.bannerSlide4Badge,
+      title1: t.bannerSlide4Title1,
+      title2: t.bannerSlide4Title2,
+      subtitle: t.bannerSlide4Subtitle,
+      cta: { label: t.bannerSlide4Cta, href: '/products/balls' },
+      cta2: null,
+      emoji: '⚽',
+      pattern: 'repeating-linear-gradient(30deg, transparent, transparent 10px, rgba(255,255,255,.04) 10px, rgba(255,255,255,.04) 20px)',
+    },
+  ];
   const [paused, setPaused] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 

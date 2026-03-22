@@ -1,12 +1,14 @@
 import { useState, type FormEvent } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { userService } from '../services/userService';
+import { useLanguage } from '../context/LanguageContext';
 import type { Address } from '../types';
 
 type Tab = 'profile' | 'password' | 'addresses';
 
 export default function ProfilePage() {
-  const { user, login } = useAuth();
+  const { user } = useAuth();
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<Tab>('profile');
 
   // Profile form
@@ -37,13 +39,13 @@ export default function ProfilePage() {
     setProfileStatus(null);
     try {
       await userService.updateProfile(profileForm);
-      setProfileStatus({ type: 'success', message: 'Profile updated successfully.' });
+      setProfileStatus({ type: 'success', message: t.profileUpdateSuccess });
       // Re-fetch user to update AuthContext
       const updated = await userService.getMe();
       // Refresh local user state by re-login is not ideal; we just show success
       void updated;
     } catch {
-      setProfileStatus({ type: 'error', message: 'Failed to update profile. Please try again.' });
+      setProfileStatus({ type: 'error', message: t.profileUpdateError });
     } finally {
       setProfileLoading(false);
     }
@@ -52,11 +54,11 @@ export default function ProfilePage() {
   const handlePasswordSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (pwForm.newPassword !== pwForm.confirmPassword) {
-      setPwStatus({ type: 'error', message: 'New passwords do not match.' });
+      setPwStatus({ type: 'error', message: t.profilePasswordMismatch });
       return;
     }
     if (pwForm.newPassword.length < 8) {
-      setPwStatus({ type: 'error', message: 'Password must be at least 8 characters.' });
+      setPwStatus({ type: 'error', message: t.profilePasswordMinLength });
       return;
     }
     setPwLoading(true);
@@ -66,10 +68,10 @@ export default function ProfilePage() {
         currentPassword: pwForm.currentPassword,
         newPassword: pwForm.newPassword,
       });
-      setPwStatus({ type: 'success', message: 'Password changed successfully.' });
+      setPwStatus({ type: 'success', message: t.profilePasswordChangeSuccess });
       setPwForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
     } catch {
-      setPwStatus({ type: 'error', message: 'Incorrect current password.' });
+      setPwStatus({ type: 'error', message: t.profilePasswordIncorrect });
     } finally {
       setPwLoading(false);
     }
@@ -81,13 +83,13 @@ export default function ProfilePage() {
     setAddrStatus(null);
     try {
       await userService.addAddress(addrForm);
-      setAddrStatus({ type: 'success', message: 'Address added.' });
+      setAddrStatus({ type: 'success', message: t.profileAddressAdded });
       setAddrForm({ street: '', city: '', state: '', postalCode: '', country: '', isDefault: false });
       setShowAddrForm(false);
       // Trigger a re-fetch
       window.location.reload();
     } catch {
-      setAddrStatus({ type: 'error', message: 'Failed to add address.' });
+      setAddrStatus({ type: 'error', message: t.profileAddressAddError });
     } finally {
       setAddrLoading(false);
     }
@@ -99,21 +101,21 @@ export default function ProfilePage() {
       await userService.removeAddress(addressId);
       window.location.reload();
     } catch {
-      setAddrStatus({ type: 'error', message: 'Failed to remove address.' });
+      setAddrStatus({ type: 'error', message: t.profileAddressRemoveError });
     } finally {
       setDeletingId(null);
     }
   };
 
   const tabs: { id: Tab; label: string }[] = [
-    { id: 'profile', label: 'Profile Info' },
-    { id: 'password', label: 'Change Password' },
-    { id: 'addresses', label: 'Addresses' },
+    { id: 'profile', label: t.profileTabProfile },
+    { id: 'password', label: t.profileTabPassword },
+    { id: 'addresses', label: t.profileTabAddresses },
   ];
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">My Account</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">{t.profileTitle}</h1>
 
       {/* Tabs */}
       <div className="flex border-b border-gray-200 mb-8 gap-1">
@@ -162,7 +164,7 @@ export default function ProfilePage() {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">First Name</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">{t.profileFirstName}</label>
               <input
                 type="text"
                 required
@@ -172,7 +174,7 @@ export default function ProfilePage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Last Name</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">{t.profileLastName}</label>
               <input
                 type="text"
                 required
@@ -184,14 +186,14 @@ export default function ProfilePage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Email address</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">{t.profileEmail}</label>
             <input
               type="email"
               disabled
               value={user?.email ?? ''}
               className="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-gray-50 text-gray-500 text-sm cursor-not-allowed"
             />
-            <p className="text-xs text-gray-400 mt-1">Email cannot be changed.</p>
+            <p className="text-xs text-gray-400 mt-1">{t.profileEmailHelp}</p>
           </div>
 
           <button
@@ -199,7 +201,7 @@ export default function ProfilePage() {
             disabled={profileLoading}
             className="bg-green-600 text-white px-6 py-2.5 rounded-xl font-semibold hover:bg-green-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed text-sm"
           >
-            {profileLoading ? 'Saving...' : 'Save Changes'}
+            {profileLoading ? t.profileSaving : t.profileSaveChanges}
           </button>
         </form>
       )}
@@ -218,9 +220,9 @@ export default function ProfilePage() {
           )}
 
           {[
-            { id: 'currentPassword', label: 'Current Password', key: 'currentPassword' as const },
-            { id: 'newPassword', label: 'New Password', key: 'newPassword' as const },
-            { id: 'confirmPassword', label: 'Confirm New Password', key: 'confirmPassword' as const },
+            { id: 'currentPassword', label: t.profileCurrentPassword, key: 'currentPassword' as const },
+            { id: 'newPassword', label: t.profileNewPassword, key: 'newPassword' as const },
+            { id: 'confirmPassword', label: t.profileConfirmPassword, key: 'confirmPassword' as const },
           ].map(({ id, label, key }) => (
             <div key={id}>
               <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1.5">{label}</label>
@@ -231,7 +233,7 @@ export default function ProfilePage() {
                 value={pwForm[key]}
                 onChange={(e) => setPwForm({ ...pwForm, [key]: e.target.value })}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
-                placeholder="••••••••"
+                placeholder={t.profilePasswordPlaceholder}
               />
             </div>
           ))}
@@ -241,7 +243,7 @@ export default function ProfilePage() {
             disabled={pwLoading}
             className="bg-green-600 text-white px-6 py-2.5 rounded-xl font-semibold hover:bg-green-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed text-sm"
           >
-            {pwLoading ? 'Updating...' : 'Update Password'}
+            {pwLoading ? t.profileUpdating : t.profileUpdatePassword}
           </button>
         </form>
       )}
@@ -269,7 +271,7 @@ export default function ProfilePage() {
                   <div className="text-sm text-gray-700 space-y-0.5">
                     {addr.isDefault && (
                       <span className="inline-block text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium mb-1">
-                        Default
+                        {t.profileAddressDefault}
                       </span>
                     )}
                     <p className="font-medium">{addr.street}</p>
@@ -282,14 +284,14 @@ export default function ProfilePage() {
                       disabled={deletingId === addr.id}
                       className="ml-4 text-sm text-red-500 hover:text-red-700 disabled:opacity-50 shrink-0"
                     >
-                      {deletingId === addr.id ? 'Removing...' : 'Remove'}
+                      {deletingId === addr.id ? t.profileAddressRemoving : t.profileAddressRemove}
                     </button>
                   )}
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-sm text-gray-500">No saved addresses yet.</p>
+            <p className="text-sm text-gray-500">{t.profileNoAddresses}</p>
           )}
 
           {!showAddrForm ? (
@@ -300,24 +302,24 @@ export default function ProfilePage() {
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
-              Add New Address
+              {t.profileAddAddress}
             </button>
           ) : (
             <form onSubmit={handleAddAddress} className="border border-gray-200 rounded-xl p-5 space-y-4 mt-4">
-              <h3 className="font-semibold text-gray-800 text-sm">New Address</h3>
+              <h3 className="font-semibold text-gray-800 text-sm">{t.profileNewAddress}</h3>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Street</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t.profileStreet}</label>
                 <input
                   type="text" required
                   value={addrForm.street}
                   onChange={(e) => setAddrForm({ ...addrForm, street: e.target.value })}
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
-                  placeholder="123 Main St"
+                  placeholder={t.profileStreetPlaceholder}
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t.profileCity}</label>
                   <input
                     type="text" required
                     value={addrForm.city}
@@ -326,7 +328,7 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">State / County</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t.profileState}</label>
                   <input
                     type="text"
                     value={addrForm.state}
@@ -337,7 +339,7 @@ export default function ProfilePage() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Postal Code</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t.profilePostalCode}</label>
                   <input
                     type="text" required
                     value={addrForm.postalCode}
@@ -346,13 +348,13 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t.profileCountry}</label>
                   <input
                     type="text" required
                     value={addrForm.country}
                     onChange={(e) => setAddrForm({ ...addrForm, country: e.target.value })}
                     className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
-                    placeholder="United Kingdom"
+                    placeholder={t.profileCountryPlaceholder}
                   />
                 </div>
               </div>
@@ -363,7 +365,7 @@ export default function ProfilePage() {
                   onChange={(e) => setAddrForm({ ...addrForm, isDefault: e.target.checked })}
                   className="rounded text-green-600"
                 />
-                Set as default address
+                {t.profileSetDefault}
               </label>
               <div className="flex gap-3 pt-1">
                 <button
@@ -371,14 +373,14 @@ export default function ProfilePage() {
                   disabled={addrLoading}
                   className="bg-green-600 text-white px-5 py-2 rounded-xl font-medium text-sm hover:bg-green-700 disabled:opacity-60"
                 >
-                  {addrLoading ? 'Saving...' : 'Save Address'}
+                  {addrLoading ? t.profileAddressSaving : t.profileAddressSave}
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowAddrForm(false)}
                   className="px-5 py-2 rounded-xl font-medium text-sm text-gray-600 hover:bg-gray-100 border border-gray-300"
                 >
-                  Cancel
+                  {t.profileAddressCancel}
                 </button>
               </div>
             </form>

@@ -17,6 +17,28 @@ export interface Translations {
   editProfile: string;
   switchTo: string;
   currentLang: string;
+  // Banner slides
+  bannerSlide1Badge: string;
+  bannerSlide1Title1: string;
+  bannerSlide1Title2: string;
+  bannerSlide1Subtitle: string;
+  bannerSlide1Cta: string;
+  bannerSlide1Cta2: string;
+  bannerSlide2Badge: string;
+  bannerSlide2Title1: string;
+  bannerSlide2Title2: string;
+  bannerSlide2Subtitle: string;
+  bannerSlide2Cta: string;
+  bannerSlide3Badge: string;
+  bannerSlide3Title1: string;
+  bannerSlide3Title2: string;
+  bannerSlide3Subtitle: string;
+  bannerSlide3Cta: string;
+  bannerSlide4Badge: string;
+  bannerSlide4Title1: string;
+  bannerSlide4Title2: string;
+  bannerSlide4Subtitle: string;
+  bannerSlide4Cta: string;
   // HomePage
   heroTitle1: string;
   heroTitle2: string;
@@ -272,6 +294,27 @@ const translations: Record<Language, Translations> = {
     editProfile: 'Edit Profile',
     switchTo: 'Tiếng Việt',
     currentLang: 'English',
+    bannerSlide1Badge: '🏆 New Season 2025',
+    bannerSlide1Title1: 'Play Like a',
+    bannerSlide1Title2: 'Champion',
+    bannerSlide1Subtitle: 'Premium football gear for every level — kits, boots, balls & accessories.',
+    bannerSlide1Cta: 'Shop Now',
+    bannerSlide1Cta2: 'Learn More',
+    bannerSlide2Badge: '👟 Staff Picks',
+    bannerSlide2Title1: 'Find Your',
+    bannerSlide2Title2: 'Perfect Boots',
+    bannerSlide2Subtitle: 'Grip the pitch with pro-grade football boots trusted by champions worldwide.',
+    bannerSlide2Cta: 'Shop Boots',
+    bannerSlide3Badge: '👕 Kits Collection',
+    bannerSlide3Title1: 'Dress Like',
+    bannerSlide3Title2: 'a Pro',
+    bannerSlide3Subtitle: 'Authentic kits and jerseys from your favourite clubs and national teams.',
+    bannerSlide3Cta: 'Shop Kits',
+    bannerSlide4Badge: '⚽ Featured Balls',
+    bannerSlide4Title1: 'The Perfect',
+    bannerSlide4Title2: 'Match Ball',
+    bannerSlide4Subtitle: 'From training to tournament — discover balls built for performance and precision.',
+    bannerSlide4Cta: 'Shop Balls',
     heroTitle1: 'Play Like a',
     heroTitle2: 'Champion',
     heroSubtitle: 'Premium football gear for every level. From grassroots to professional — find your perfect kit, boots, and equipment.',
@@ -500,7 +543,7 @@ const translations: Record<Language, Translations> = {
   },
   vi: {
     topBar: 'Miễn phí vận chuyển cho đơn hàng trên £50',
-    kits: 'Bộ dụng cụ',
+    kits: 'Quần áo',
     boots: 'Giày',
     accessories: 'Phụ kiện',
     balls: 'Bóng',
@@ -513,6 +556,27 @@ const translations: Record<Language, Translations> = {
     editProfile: 'Chỉnh sửa hồ sơ',
     switchTo: 'English',
     currentLang: 'Tiếng Việt',
+    bannerSlide1Badge: '🏆 Mùa Giải Mới 2025',
+    bannerSlide1Title1: 'Chơi Như Một',
+    bannerSlide1Title2: 'Nhà Vô Địch',
+    bannerSlide1Subtitle: 'Trang bị bóng đá cao cấp cho mọi cấp độ — bộ đồ, giày, bóng & phụ kiện.',
+    bannerSlide1Cta: 'Mua Ngay',
+    bannerSlide1Cta2: 'Tìm Hiểu Thêm',
+    bannerSlide2Badge: '👟 Lựa Chọn Của Nhân Viên',
+    bannerSlide2Title1: 'Tìm Đôi Giày',
+    bannerSlide2Title2: 'Hoàn Hảo Của Bạn',
+    bannerSlide2Subtitle: 'Bám sân với giày bóng đá chuyên nghiệp được các nhà vô địch tin dùng trên toàn thế giới.',
+    bannerSlide2Cta: 'Mua Giày',
+    bannerSlide3Badge: '👕 Bộ Sưu Tập Bộ Đồ',
+    bannerSlide3Title1: 'Mặc Như',
+    bannerSlide3Title2: 'Người Chuyên Nghiệp',
+    bannerSlide3Subtitle: 'Bộ đồ và áo đấu chính hãng từ các câu lạc bộ và đội tuyển quốc gia yêu thích của bạn.',
+    bannerSlide3Cta: 'Mua Bộ Đồ',
+    bannerSlide4Badge: '⚽ Bóng Nổi Bật',
+    bannerSlide4Title1: 'Quả Bóng',
+    bannerSlide4Title2: 'Hoàn Hảo Nhất',
+    bannerSlide4Subtitle: 'Từ tập luyện đến thi đấu — khám phá những quả bóng được tạo ra cho hiệu suất và độ chính xác.',
+    bannerSlide4Cta: 'Mua Bóng',
     heroTitle1: 'Chơi Như Một',
     heroTitle2: 'Nhà Vô Địch',
     heroSubtitle: 'Trang bị bóng đá cao cấp cho mọi cấp độ. Từ phong trào đến chuyên nghiệp — tìm bộ đồ, giày và thiết bị hoàn hảo của bạn.',
