@@ -4,6 +4,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { useCart } from '../../hooks/useCart';
 import { useLanguage } from '../../context/LanguageContext';
 import { PremierSportLogo } from '../PremierSportLogo';
+import { SearchBar } from '../SearchBar';
 
 export function Header() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -11,6 +12,7 @@ export function Header() {
   const { language, t, toggleLanguage } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const [prevPathname, setPrevPathname] = useState(location.pathname);
@@ -25,6 +27,10 @@ export function Header() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [profileOpen]);
+
+  useEffect(() => {
+    setSearchOpen(false);
+  }, [location.pathname]);
 
   if (prevPathname !== location.pathname) {
     setPrevPathname(location.pathname);
@@ -76,6 +82,19 @@ export function Header() {
 
           {/* Right actions */}
           <div className="flex items-center gap-4">
+            {/* Search toggle */}
+            <button
+              onClick={() => setSearchOpen((o) => !o)}
+              className={`p-2 transition-colors ${searchOpen ? 'text-green-600' : 'text-gray-600 hover:text-gray-900'}`}
+              aria-label={searchOpen ? 'Close search' : 'Open search'}
+              aria-expanded={searchOpen}
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </button>
+
             {/* Cart */}
             <Link to="/cart" className="relative p-2 text-gray-600 hover:text-gray-900" aria-label="Shopping cart">
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -216,6 +235,15 @@ export function Header() {
           </div>
         </div>
       </div>
+
+      {/* Search bar row — visible on both desktop and mobile when searchOpen */}
+      {searchOpen && (
+        <div className="border-t border-gray-100 px-4 py-3">
+          <div className="max-w-7xl mx-auto">
+            <SearchBar onClose={() => setSearchOpen(false)} />
+          </div>
+        </div>
+      )}
 
       {/* Mobile menu */}
       {menuOpen && (

@@ -171,3 +171,19 @@ export interface ChatSession {
   messages: ChatMessage[];
   createdAt: string;
 }
+
+export interface ProductSuggestion {
+  id: string;
+  name: string;
+  slug: string;
+  image: string | null;
+  price: number;
+  salePrice?: number;
+  category: ProductCategory;
+}
+
+export interface SearchSuggestionsResponse {
+  products: ProductSuggestion[];
+  categories: string[];
+  brands: string[];
+}

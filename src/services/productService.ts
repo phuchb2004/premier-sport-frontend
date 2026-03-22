@@ -1,5 +1,5 @@
 import api from './api';
-import type { PageResponse, Product, ProductCategory } from '../types';
+import type { PageResponse, Product, ProductCategory, SearchSuggestionsResponse } from '../types';
 
 export interface ProductFilters {
   category?: ProductCategory;
@@ -27,6 +27,14 @@ export const productService = {
 
   async getCategories(): Promise<{ category: string; count: number }[]> {
     const response = await api.get<{ category: string; count: number }[]>('/products/categories');
+    return response.data;
+  },
+
+  async searchSuggestions(q: string, signal?: AbortSignal): Promise<SearchSuggestionsResponse> {
+    const response = await api.get<SearchSuggestionsResponse>(
+      '/products/search/suggestions',
+      { params: { q }, signal }
+    );
     return response.data;
   },
 };
