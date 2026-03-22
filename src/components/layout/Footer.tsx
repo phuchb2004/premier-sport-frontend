@@ -26,7 +26,7 @@ export function Footer() {
             <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">{t.footerShop}</h3>
             <ul className="space-y-2 text-sm">
               {[
-                { label: t.kits, path: '/products/kits' },
+                { label: t.jersey, path: '/products/jersey' },
                 { label: t.boots, path: '/products/boots' },
                 { label: t.accessories, path: '/products/accessories' },
                 { label: t.balls, path: '/products/balls' },

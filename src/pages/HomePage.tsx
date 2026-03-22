@@ -42,7 +42,7 @@ function HeroBanner() {
       title1: t.bannerSlide3Title1,
       title2: t.bannerSlide3Title2,
       subtitle: t.bannerSlide3Subtitle,
-      cta: { label: t.bannerSlide3Cta, href: '/products/kits' },
+      cta: { label: t.bannerSlide3Cta, href: '/products/jersey' },
       cta2: null,
       emoji: '👕',
       pattern: 'repeating-linear-gradient(60deg, transparent, transparent 8px, rgba(255,255,255,.04) 8px, rgba(255,255,255,.04) 16px)',
@@ -193,9 +193,9 @@ function ProductCard({ product }: { product: Product }) {
         <p className="text-xs text-gray-500 mb-1">{product.brand}</p>
         <h3 className="font-semibold text-gray-900 text-sm line-clamp-2">{product.name}</h3>
         <div className="flex items-center gap-2 mt-2">
-          <span className="font-bold text-gray-900">£{displayPrice.toFixed(2)}</span>
+          <span className="font-bold text-gray-900">{displayPrice.toLocaleString('vi-VN')}₫</span>
           {isOnSale && (
-            <span className="text-sm text-gray-400 line-through">£{product.price.toFixed(2)}</span>
+            <span className="text-sm text-gray-400 line-through">{product.price.toLocaleString('vi-VN')}₫</span>
           )}
         </div>
       </div>
@@ -210,7 +210,7 @@ export default function HomePage() {
   const [fetchError, setFetchError] = useState(false);
 
   const CATEGORIES = [
-    { label: t.kits, value: 'KITS', path: '/products/kits', description: t.kitsDesc, emoji: '👕', color: 'from-blue-500 to-blue-700' },
+    { label: t.jersey, value: 'JERSEY', path: '/products/jersey', description: t.jerseyDesc, emoji: '👕', color: 'from-blue-500 to-blue-700' },
     { label: t.boots, value: 'BOOTS', path: '/products/boots', description: t.bootsDesc, emoji: '👟', color: 'from-red-500 to-red-700' },
     { label: t.accessories, value: 'ACCESSORIES', path: '/products/accessories', description: t.accessoriesDesc, emoji: '🧤', color: 'from-yellow-500 to-yellow-700' },
     { label: t.balls, value: 'BALLS', path: '/products/balls', description: t.ballsDesc, emoji: '⚽', color: 'from-green-500 to-green-700' },

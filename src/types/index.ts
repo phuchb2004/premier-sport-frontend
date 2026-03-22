@@ -19,7 +19,7 @@ export interface Address {
   isDefault: boolean;
 }
 
-export type ProductCategory = 'KITS' | 'BOOTS' | 'ACCESSORIES' | 'BALLS';
+export type ProductCategory = 'JERSEY' | 'BOOTS' | 'ACCESSORIES' | 'BALLS';
 
 export interface Product {
   id: string;

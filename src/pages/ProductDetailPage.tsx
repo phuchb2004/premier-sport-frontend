@@ -38,7 +38,7 @@ export default function ProductDetailPage() {
   const { t } = useLanguage();
 
   const CATEGORY_LABELS: Record<string, string> = {
-    KITS: t.kits,
+    JERSEY: t.jersey,
     BOOTS: t.boots,
     ACCESSORIES: t.accessories,
     BALLS: t.balls,
@@ -218,12 +218,12 @@ export default function ProductDetailPage() {
 
             {/* Price */}
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-3xl font-bold text-gray-900">£{displayPrice.toFixed(2)}</span>
+              <span className="text-3xl font-bold text-gray-900">{displayPrice.toLocaleString('vi-VN')}₫</span>
               {isOnSale && (
                 <>
-                  <span className="text-xl text-gray-400 line-through">£{product.price.toFixed(2)}</span>
+                  <span className="text-xl text-gray-400 line-through">{product.price.toLocaleString('vi-VN')}₫</span>
                   <span className="bg-red-100 text-red-600 text-sm font-bold px-2 py-0.5 rounded">
-                    {t.productSavePrefix}{(product.price - displayPrice).toFixed(2)}
+                    {t.productSavePrefix}{(product.price - displayPrice).toLocaleString('vi-VN')}₫
                   </span>
                 </>
               )}

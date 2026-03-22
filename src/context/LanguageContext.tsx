@@ -4,7 +4,7 @@ type Language = 'en' | 'vi';
 
 export interface Translations {
   topBar: string;
-  kits: string;
+  jersey: string;
   boots: string;
   accessories: string;
   balls: string;
@@ -47,7 +47,7 @@ export interface Translations {
   learnMore: string;
   shopByCategory: string;
   categorySubtitle: string;
-  kitsDesc: string;
+  jerseyDesc: string;
   bootsDesc: string;
   accessoriesDesc: string;
   ballsDesc: string;
@@ -280,8 +280,8 @@ export interface Translations {
 
 const translations: Record<Language, Translations> = {
   en: {
-    topBar: 'Free shipping on orders over £50',
-    kits: 'Kits',
+    topBar: 'Free shipping on orders over 1.000.000₫',
+    jersey: 'Jersey',
     boots: 'Boots',
     accessories: 'Accessories',
     balls: 'Balls',
@@ -297,7 +297,7 @@ const translations: Record<Language, Translations> = {
     bannerSlide1Badge: '🏆 New Season 2025',
     bannerSlide1Title1: 'Play Like a',
     bannerSlide1Title2: 'Champion',
-    bannerSlide1Subtitle: 'Premium football gear for every level — kits, boots, balls & accessories.',
+    bannerSlide1Subtitle: 'Premium football gear for every level — jerseys, boots, balls & accessories.',
     bannerSlide1Cta: 'Shop Now',
     bannerSlide1Cta2: 'Learn More',
     bannerSlide2Badge: '👟 Staff Picks',
@@ -305,11 +305,11 @@ const translations: Record<Language, Translations> = {
     bannerSlide2Title2: 'Perfect Boots',
     bannerSlide2Subtitle: 'Grip the pitch with pro-grade football boots trusted by champions worldwide.',
     bannerSlide2Cta: 'Shop Boots',
-    bannerSlide3Badge: '👕 Kits Collection',
+    bannerSlide3Badge: '👕 Jersey Collection',
     bannerSlide3Title1: 'Dress Like',
     bannerSlide3Title2: 'a Pro',
-    bannerSlide3Subtitle: 'Authentic kits and jerseys from your favourite clubs and national teams.',
-    bannerSlide3Cta: 'Shop Kits',
+    bannerSlide3Subtitle: 'Authentic jerseys from your favourite clubs and national teams.',
+    bannerSlide3Cta: 'Shop Jerseys',
     bannerSlide4Badge: '⚽ Featured Balls',
     bannerSlide4Title1: 'The Perfect',
     bannerSlide4Title2: 'Match Ball',
@@ -322,7 +322,7 @@ const translations: Record<Language, Translations> = {
     learnMore: 'Learn More',
     shopByCategory: 'Shop by Category',
     categorySubtitle: 'Everything you need on and off the pitch',
-    kitsDesc: 'Full match kits & training wear',
+    jerseyDesc: 'Full match jerseys & training wear',
     bootsDesc: 'Performance football boots',
     accessoriesDesc: 'Shin pads, gloves & more',
     ballsDesc: 'Match & training balls',
@@ -332,7 +332,7 @@ const translations: Record<Language, Translations> = {
     loadingError: 'Unable to load featured products. Please try again later.',
     featuredEmpty: 'Featured products coming soon',
     freeDelivery: 'Free Delivery',
-    freeDeliveryDesc: 'On orders over £50',
+    freeDeliveryDesc: 'On orders over 1.000.000₫',
     easyReturns: 'Easy Returns',
     easyReturnsDesc: '30-day return policy',
     securePayment: 'Secure Payment',
@@ -341,11 +341,11 @@ const translations: Record<Language, Translations> = {
     aboutSubtitle: 'Your home for premium football gear',
     ourStory: 'Our Story',
     storyP1: "Premier Sport was founded with a simple mission: make top-quality football gear accessible to players at every level. Whether you're a Sunday league warrior or an aspiring professional, you deserve the best.",
-    storyP2: "We stock kits, boots, accessories, and training equipment from the world's leading brands, curated by our team of passionate football enthusiasts.",
+    storyP2: "We stock jerseys, boots, accessories, and training equipment from the world's leading brands, curated by our team of passionate football enthusiasts.",
     statProducts: 'Products',
     statBrands: 'Brands',
     statCustomers: 'Happy customers',
-    footerTagline: 'Your premier destination for football kits, boots, accessories, and equipment. Gear up and play like a champion.',
+    footerTagline: 'Your premier destination for football jerseys, boots, accessories, and equipment. Gear up and play like a champion.',
     footerShop: 'Shop',
     footerCompany: 'Company',
     footerAboutUs: 'About Us',
@@ -472,7 +472,7 @@ const translations: Record<Language, Translations> = {
     productLowStockPrefix: 'Only ',
     productLowStockSuffix: ' left in stock!',
     productSizeError: 'Please select a size before adding to cart.',
-    productSavePrefix: 'SAVE £',
+    productSavePrefix: 'SAVE ',
     profileTitle: 'My Account',
     profileTabProfile: 'Profile Info',
     profileTabPassword: 'Change Password',
@@ -542,8 +542,8 @@ const translations: Record<Language, Translations> = {
     orderConfirmViewAll: 'View all orders',
   },
   vi: {
-    topBar: 'Miễn phí vận chuyển cho đơn hàng trên £50',
-    kits: 'Quần áo',
+    topBar: 'Miễn phí vận chuyển cho đơn hàng trên 1.000.000₫',
+    jersey: 'Quần áo',
     boots: 'Giày',
     accessories: 'Phụ kiện',
     balls: 'Bóng',
@@ -584,7 +584,7 @@ const translations: Record<Language, Translations> = {
     learnMore: 'Tìm Hiểu Thêm',
     shopByCategory: 'Mua Theo Danh Mục',
     categorySubtitle: 'Mọi thứ bạn cần trên và ngoài sân',
-    kitsDesc: 'Bộ đồ thi đấu & tập luyện đầy đủ',
+    jerseyDesc: 'Bộ đồ thi đấu & tập luyện đầy đủ',
     bootsDesc: 'Giày bóng đá hiệu suất cao',
     accessoriesDesc: 'Bảo vệ ống chân, găng tay & nhiều hơn',
     ballsDesc: 'Bóng thi đấu & tập luyện',
@@ -594,7 +594,7 @@ const translations: Record<Language, Translations> = {
     loadingError: 'Không thể tải sản phẩm nổi bật. Vui lòng thử lại sau.',
     featuredEmpty: 'Sản phẩm nổi bật sắp ra mắt',
     freeDelivery: 'Giao Hàng Miễn Phí',
-    freeDeliveryDesc: 'Cho đơn hàng trên £50',
+    freeDeliveryDesc: 'Cho đơn hàng trên 1.000.000₫',
     easyReturns: 'Đổi Trả Dễ Dàng',
     easyReturnsDesc: 'Chính sách hoàn trả 30 ngày',
     securePayment: 'Thanh Toán An Toàn',
@@ -734,7 +734,7 @@ const translations: Record<Language, Translations> = {
     productLowStockPrefix: 'Chỉ còn ',
     productLowStockSuffix: ' trong kho!',
     productSizeError: 'Vui lòng chọn cỡ trước khi thêm vào giỏ hàng.',
-    productSavePrefix: 'TIẾT KIỆM £',
+    productSavePrefix: 'TIẾT KIỆM ',
     profileTitle: 'Tài khoản của tôi',
     profileTabProfile: 'Thông tin hồ sơ',
     profileTabPassword: 'Đổi mật khẩu',

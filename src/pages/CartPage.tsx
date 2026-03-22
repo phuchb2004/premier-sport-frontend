@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
 import { useLanguage } from '../context/LanguageContext';
 
-const DELIVERY_COST = 4.99;
+const DELIVERY_COST = 50000;
 
 export default function CartPage() {
   const { cart, isLoading, updateItem, removeItem } = useCart();
@@ -62,12 +62,12 @@ export default function CartPage() {
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-gray-900 truncate">{item.productName}</h3>
                 <p className="text-sm text-gray-500 mt-0.5">{t.cartSizePrefix}{item.size}{item.color ? ` · ${item.color}` : ''}</p>
-                <p className="text-sm font-medium text-gray-900 mt-1">£{item.unitPrice.toFixed(2)} {t.cartEach}</p>
+                <p className="text-sm font-medium text-gray-900 mt-1">{item.unitPrice.toLocaleString('vi-VN')}₫ {t.cartEach}</p>
               </div>
 
               <div className="flex flex-col items-end justify-between">
                 <p className="font-semibold text-gray-900">
-                  £{(item.unitPrice * item.quantity).toFixed(2)}
+                  {(item.unitPrice * item.quantity).toLocaleString('vi-VN')}₫
                 </p>
 
                 <div className="flex items-center gap-2">
@@ -111,15 +111,15 @@ export default function CartPage() {
             <div className="space-y-3 text-sm">
               <div className="flex justify-between text-gray-600">
                 <span>{t.cartSubtotalPrefix}{items.reduce((s, i) => s + i.quantity, 0)}{t.cartSubtotalSuffix}</span>
-                <span>£{subtotal.toFixed(2)}</span>
+                <span>{subtotal.toLocaleString('vi-VN')}₫</span>
               </div>
               <div className="flex justify-between text-gray-600">
                 <span>{t.cartDelivery}</span>
-                <span>£{DELIVERY_COST.toFixed(2)}</span>
+                <span>{DELIVERY_COST.toLocaleString('vi-VN')}₫</span>
               </div>
               <div className="border-t border-gray-200 pt-3 flex justify-between font-semibold text-gray-900 text-base">
                 <span>{t.cartTotal}</span>
-                <span>£{total.toFixed(2)}</span>
+                <span>{total.toLocaleString('vi-VN')}₫</span>
               </div>
             </div>
 

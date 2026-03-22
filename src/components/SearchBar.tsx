@@ -170,8 +170,8 @@ export function SearchBar({ onClose }: SearchBarProps) {
                     <p className="text-sm font-medium text-gray-900 truncate">{product.name}</p>
                     <p className="text-xs text-gray-500">
                       {product.salePrice != null
-                        ? `£${product.salePrice.toFixed(2)}`
-                        : `£${product.price.toFixed(2)}`}
+                        ? `${product.salePrice.toLocaleString('vi-VN')}₫`
+                        : `${product.price.toLocaleString('vi-VN')}₫`}
                     </p>
                   </div>
                 </button>

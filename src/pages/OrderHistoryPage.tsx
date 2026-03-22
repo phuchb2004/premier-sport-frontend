@@ -75,7 +75,7 @@ export default function OrderHistoryPage() {
                     <td className="px-4 py-3 font-medium text-gray-900">{order.orderNumber}</td>
                     <td className="px-4 py-3 text-gray-600">{date}</td>
                     <td className="px-4 py-3 text-gray-600">{order.items.length} {order.items.length === 1 ? t.orderHistoryItemSingular : t.orderHistoryItemPlural}</td>
-                    <td className="px-4 py-3 text-right font-medium text-gray-900">£{order.total.toFixed(2)}</td>
+                    <td className="px-4 py-3 text-right font-medium text-gray-900">{order.total.toLocaleString('vi-VN')}₫</td>
                     <td className="px-4 py-3">
                       <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${badge.classes}`}>
                         {badge.label}

@@ -47,9 +47,9 @@ function ProductCard({ product }: { product: Product }) {
         <p className="text-xs text-gray-500 mb-1 uppercase tracking-wide">{product.brand}</p>
         <h3 className="font-semibold text-gray-900 text-sm line-clamp-2 mb-2">{product.name}</h3>
         <div className="flex items-center gap-2">
-          <span className="font-bold text-gray-900">£{displayPrice.toFixed(2)}</span>
+          <span className="font-bold text-gray-900">{displayPrice.toLocaleString('vi-VN')}₫</span>
           {isOnSale && (
-            <span className="text-sm text-gray-400 line-through">£{product.price.toFixed(2)}</span>
+            <span className="text-sm text-gray-400 line-through">{product.price.toLocaleString('vi-VN')}₫</span>
           )}
         </div>
       </div>
@@ -124,7 +124,7 @@ export default function ProductsPage() {
 
   const CATEGORIES: { label: string; value: ProductCategory | 'ALL' }[] = [
     { label: t.productsAll, value: 'ALL' },
-    { label: t.kits, value: 'KITS' },
+    { label: t.jersey, value: 'JERSEY' },
     { label: t.boots, value: 'BOOTS' },
     { label: t.accessories, value: 'ACCESSORIES' },
     { label: t.balls, value: 'BALLS' },

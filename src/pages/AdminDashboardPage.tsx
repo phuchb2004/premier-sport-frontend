@@ -4,7 +4,7 @@ import { adminService } from '../services/adminService';
 import type { AnalyticsDto } from '../types';
 
 function fmt(n: number) {
-  return `£${n.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  return `${n.toLocaleString('vi-VN')}₫`;
 }
 
 function TrendBadge({ current, previous }: { current: number; previous: number }) {

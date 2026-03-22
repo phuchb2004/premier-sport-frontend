@@ -3,7 +3,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { adminService } from '../services/adminService';
 import type { CreateProductRequest, Product, ProductCategory } from '../types';
 
-const CATEGORIES: ProductCategory[] = ['KITS', 'BOOTS', 'ACCESSORIES', 'BALLS'];
+const CATEGORIES: ProductCategory[] = ['JERSEY', 'BOOTS', 'ACCESSORIES', 'BALLS'];
 const SIZE_PRESETS = {
   clothing: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
   boots: ['6', '7', '8', '9', '10', '11', '12'],
@@ -26,7 +26,7 @@ interface FormState {
 
 const defaultForm: FormState = {
   name: '',
-  category: 'KITS',
+  category: 'JERSEY',
   brand: '',
   description: '',
   price: '',
@@ -259,7 +259,7 @@ export default function AdminProductFormPage() {
         {/* Price + Sale Price + Stock */}
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Price (£) *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Price (₫) *</label>
             <input
               type="number"
               min="0"
@@ -273,7 +273,7 @@ export default function AdminProductFormPage() {
             {errors.price && <p className="text-xs text-red-600 mt-1">{errors.price}</p>}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Sale Price (£)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Sale Price (₫)</label>
             <input
               type="number"
               min="0"

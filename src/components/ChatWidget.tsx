@@ -150,7 +150,7 @@ export function ChatWidget() {
               <div className="text-center text-gray-500 text-sm mt-8 px-4">
                 <p className="text-3xl mb-3">⚽</p>
                 <p className="font-medium text-gray-700">Hi! I'm your Premier Sport assistant.</p>
-                <p className="mt-1 text-xs text-gray-400">Ask me about boots, kits, or any sports gear!</p>
+                <p className="mt-1 text-xs text-gray-400">Ask me about boots, jerseys, or any sports gear!</p>
               </div>
             )}
 

@@ -5,7 +5,7 @@ import { adminService } from '../services/adminService';
 import type { PageResponse, Product } from '../types';
 
 function fmt(n: number) {
-  return `£${n.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  return `${n.toLocaleString('vi-VN')}₫`;
 }
 
 export default function AdminProductsPage() {

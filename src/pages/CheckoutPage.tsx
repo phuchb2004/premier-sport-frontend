@@ -5,7 +5,7 @@ import { orderService } from '../services/orderService';
 import type { CartItem, Order } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 
-const DELIVERY_COST = 4.99;
+const DELIVERY_COST = 50000;
 
 // Placeholder bank/wallet details — replace with real accounts before going live
 const VIETQR_BANK_ID = 'vcb';
@@ -58,7 +58,7 @@ function VietQRPanel({ order }: { order: Order }) {
         </div>
         <div className="flex justify-between">
           <span className="text-gray-500">{t.checkoutAmountLabel}</span>
-          <span className="font-semibold text-green-700">£{order.total.toFixed(2)}</span>
+          <span className="font-semibold text-green-700">{order.total.toLocaleString('vi-VN')}₫</span>
         </div>
         <div className="flex justify-between">
           <span className="text-gray-500">{t.checkoutContentLabel}</span>
@@ -97,7 +97,7 @@ function MoMoPanel({ order }: { order: Order }) {
         </div>
         <div className="flex justify-between">
           <span className="text-gray-500">{t.checkoutAmountLabel}</span>
-          <span className="font-semibold text-green-700">£{order.total.toFixed(2)}</span>
+          <span className="font-semibold text-green-700">{order.total.toLocaleString('vi-VN')}₫</span>
         </div>
         <div className="flex justify-between">
           <span className="text-gray-500">{t.checkoutContentLabel}</span>
@@ -348,7 +348,7 @@ export default function CheckoutPage() {
                     {item.productName} × {item.quantity}
                   </span>
                   <span className="text-gray-900 font-medium flex-shrink-0">
-                    £{(item.unitPrice * item.quantity).toFixed(2)}
+                    {(item.unitPrice * item.quantity).toLocaleString('vi-VN')}₫
                   </span>
                 </div>
               ))}
@@ -357,15 +357,15 @@ export default function CheckoutPage() {
             <div className="border-t border-gray-200 pt-3 space-y-2 text-sm">
               <div className="flex justify-between text-gray-600">
                 <span>{t.checkoutSubtotal}</span>
-                <span>£{subtotal.toFixed(2)}</span>
+                <span>{subtotal.toLocaleString('vi-VN')}₫</span>
               </div>
               <div className="flex justify-between text-gray-600">
                 <span>{t.checkoutShippingFee}</span>
-                <span>£{DELIVERY_COST.toFixed(2)}</span>
+                <span>{DELIVERY_COST.toLocaleString('vi-VN')}₫</span>
               </div>
               <div className="flex justify-between font-semibold text-gray-900 text-base pt-1 border-t border-gray-200">
                 <span>{t.checkoutTotalLabel}</span>
-                <span>£{total.toFixed(2)}</span>
+                <span>{total.toLocaleString('vi-VN')}₫</span>
               </div>
             </div>
 

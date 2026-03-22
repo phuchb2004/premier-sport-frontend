@@ -39,7 +39,7 @@ export function Header() {
   }
 
   const categories = [
-    { label: t.kits, path: '/products/kits' },
+    { label: t.jersey, path: '/products/jersey' },
     { label: t.boots, path: '/products/boots' },
     { label: t.accessories, path: '/products/accessories' },
     { label: t.balls, path: '/products/balls' },

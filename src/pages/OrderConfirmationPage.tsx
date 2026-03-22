@@ -71,14 +71,14 @@ export default function OrderConfirmationPage() {
                 <span className="text-gray-500 ml-2">{t.orderConfirmQtyPrefix}{item.quantity}</span>
               </div>
               <span className="font-medium text-gray-900">
-                £{(item.unitPrice * item.quantity).toFixed(2)}
+                {(item.unitPrice * item.quantity).toLocaleString('vi-VN')}₫
               </span>
             </div>
           ))}
         </div>
         <div className="border-t border-gray-200 mt-4 pt-3 flex justify-between font-semibold text-gray-900">
           <span>{t.orderConfirmTotal}</span>
-          <span>£{order.total.toFixed(2)}</span>
+          <span>{order.total.toLocaleString('vi-VN')}₫</span>
         </div>
       </div>
 

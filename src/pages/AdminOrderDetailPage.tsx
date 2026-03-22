@@ -22,7 +22,7 @@ const statusColors: Record<OrderStatus, string> = {
 };
 
 function fmt(n: number) {
-  return `£${n.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  return `${n.toLocaleString('vi-VN')}₫`;
 }
 
 export default function AdminOrderDetailPage() {
