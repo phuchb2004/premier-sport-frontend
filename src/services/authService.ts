@@ -46,4 +46,10 @@ export const authService = {
   isAuthenticated(): boolean {
     return !!localStorage.getItem('accessToken');
   },
+
+  async googleAuth(credential: string): Promise<AuthResponse> {
+    const response = await api.post<AuthResponse>('/auth/google', { credential });
+    storeTokens(response.data);
+    return response.data;
+  },
 };

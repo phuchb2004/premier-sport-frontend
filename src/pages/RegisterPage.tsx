@@ -3,9 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { PremierSportLogo } from '../components/PremierSportLogo';
 import { useLanguage } from '../context/LanguageContext';
+import { GoogleLogin } from '@react-oauth/google';
 
 export default function RegisterPage() {
-  const { register } = useAuth();
+  const { register, googleLogin } = useAuth();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -205,6 +206,34 @@ export default function RegisterPage() {
               {isLoading ? t.registerCreating : t.registerCreate}
             </button>
           </form>
+
+          {/* Google sign-up */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-200" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="bg-white px-3 text-gray-400">or</span>
+            </div>
+          </div>
+
+          <GoogleLogin
+            onSuccess={async (credentialResponse) => {
+              if (!credentialResponse.credential) return;
+              setError('');
+              setIsLoading(true);
+              try {
+                await googleLogin(credentialResponse.credential);
+                navigate('/', { replace: true });
+              } catch {
+                setError('Google sign-in failed. Please try again.');
+              } finally {
+                setIsLoading(false);
+              }
+            }}
+            onError={() => setError('Google sign-in failed. Please try again.')}
+            width="368"
+          />
         </div>
 
         <p className="text-center text-sm text-gray-500 mt-6">

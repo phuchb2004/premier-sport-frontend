@@ -10,6 +10,7 @@ export interface AuthContextType {
   login: (data: LoginRequest) => Promise<void>;
   register: (data: RegisterRequest) => Promise<void>;
   logout: () => Promise<void>;
+  googleLogin: (credential: string) => Promise<void>;
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -54,8 +55,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const googleLogin = async (credential: string) => {
+    const response = await authService.googleAuth(credential);
+    setUser(response.user);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, isLoading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, isLoading, login, register, logout, googleLogin }}>
       {children}
     </AuthContext.Provider>
   );
